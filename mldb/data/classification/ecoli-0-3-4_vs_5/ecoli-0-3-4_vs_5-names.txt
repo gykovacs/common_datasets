@@ -1,0 +1,27 @@
+Ecoli (Imbalanced: 0-3-4 vs 5) data set
+
+1: Description.
+
+A imbalanced version of the Ecoli data set, where the possitive examples belong to classes cp, imL and imU and the negative examples belong to the class om.
+
+2: Type.				Imbalanced
+3: Origin.				Real world
+4: Instances.			200
+5: Features.			7
+6: Classes.				2
+7: Missing values.		No
+8: IR:					9
+
+9: Header.
+
+@relation ecoli-0-3-4_vs_5
+@attribute a1 real [0.0, 88.0]
+@attribute a2 real [3.0, 88.0]
+@attribute a3 real [1.0, 48.0]
+@attribute a4 real [1.0, 5.0]
+@attribute a5 real [3.0, 88.0]
+@attribute a6 real [2.0, 92.0]
+@attribute a7 real [0.0, 88.0]
+@attribute class {positive, negative}
+@inputs a1, a2, a3, a4, a5, a6, a7
+@outputs class

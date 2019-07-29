@@ -1,0 +1,26 @@
+Chess - King-Rook vs. King (Imbalanced: zero-one vs draw) data set
+
+1: Description.
+
+An imbalanced version of the Chess - King-Rook vs. King data set, where the possitive examples belong to the classes zero-one and the negative examples belong to the class draw.
+
+2: Type.				Imbalanced
+3: Origin.				Laboratory
+4: Instances.			2901
+5: Features.			6
+6: Classes.				2
+7: Missing values.		No
+8: IR:					26,63
+
+9: Header.
+
+@relation kr-vs-k-zero-one_vs_draw
+@attribute White_king_col {a, b, c, d, e, f, g, h}
+@attribute White_king_row {1, 2, 3, 4, 5, 6, 7, 8}
+@attribute White_rook_col {a, b, c, d, e, f, g, h}
+@attribute White_rook_row {1, 2, 3, 4, 5, 6, 7, 8}
+@attribute Black_king_col {a, b, c, d, e, f, g, h}
+@attribute Black_king_row {1, 2, 3, 4, 5, 6, 7, 8}
+@attribute Class {positive, negative}
+@inputs White_king_col, White_king_row, White_rook_col, White_rook_row, Black_king_col, Black_king_row
+@outputs Class

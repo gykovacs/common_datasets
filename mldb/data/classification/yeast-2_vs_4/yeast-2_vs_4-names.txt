@@ -1,0 +1,28 @@
+Yeast (Imbalanced: 2 vs 4) data set
+
+1: Description.
+
+A imbalanced version of the Yeast data set, where the possitive examples belong to class CYT and the negative examples belong to classes ME2.
+
+2: Type.			Imbalanced	
+3: Origin.			Real world
+4: Instances.		514
+5: Features.		8
+6: Classes.			2	
+7: Missing values.	No
+8: IR: 				9.08
+
+9: Header.
+
+@relation yeast-2_vs_4
+@attribute Mcg real [0.11, 1.0]
+@attribute Gvh real [0.13, 1.0]
+@attribute Alm real [0.21, 1.0]
+@attribute Mit real [0.0, 1.0]
+@attribute Erl real [0.5, 1.0]
+@attribute Pox real [0.0, 0.83]
+@attribute Vac real [0.0, 0.73]
+@attribute Nuc real [0.0, 1.0]
+@attribute Class {positive,negative}
+@inputs Mcg, Gvh, Alm, Mit, Erl, Pox, Vac, Nuc
+@outputs Class

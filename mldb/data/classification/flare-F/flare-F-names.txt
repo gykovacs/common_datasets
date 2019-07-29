@@ -1,0 +1,31 @@
+Solar Flare (Imbalanced: F vs rest) data set
+
+1: Description.
+
+An imbalanced version of the Solar Flare data set, where the possitive examples belong to the class F and the negative examples to the rest of the classes.
+
+2: Type.				Imbalanced
+3: Origin.				Laboratory
+4: Instances.			1066
+5: Features.			11
+6: Classes.				2
+7: Missing values.		No
+8: IR:					23,79
+
+9: Header.
+
+@relation flare-F
+@attribute LargestSpotSize {A, R, S, X, K, H}
+@attribute SpotDistribution {X, O, I, C}
+@attribute Activity {1, 2}
+@attribute Evolution {1, 2, 3}
+@attribute Prev24Hour {1, 2, 3}
+@attribute HistComplex {1, 2}
+@attribute BecomeHist {1, 2}
+@attribute Area {1, 2}
+@attribute C-class {0, 1, 2, 3, 4, 5, 6, 7, 8}
+@attribute M-class {0, 1, 2, 3, 4, 5}
+@attribute X-class {0, 1, 2}
+@attribute Class {positive, negative}
+@inputs LargestSpotSize, SpotDistribution, Activity, Evolution, Prev24Hour, HistComplex, BecomeHist, Area, C-class, M-class, X-class
+@outputs Class

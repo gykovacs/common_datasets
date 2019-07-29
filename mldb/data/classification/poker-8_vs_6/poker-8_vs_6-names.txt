@@ -1,0 +1,30 @@
+Poker Hand (Imbalanced: 8 vs 6) data set
+
+1: Description.
+
+An imbalanced version of the Poker Hand data set, where the possitive examples belong to the class 8 and the negative examples belong to the class 6.
+
+2: Type.				Imbalanced
+3: Origin.				Laboratory
+4: Instances.			1477
+5: Features.			10
+6: Classes.				2
+7: Missing values.		No
+8: IR:					85,88
+
+9: Header.
+
+@relation poker-8_vs_6
+@attribute S1 integer [1, 4]
+@attribute C1 integer [1, 13]
+@attribute S2 integer [1, 4]
+@attribute C2 integer [1, 13]
+@attribute S3 integer [1, 4]
+@attribute C3 integer [1, 13]
+@attribute S4 integer [1, 4]
+@attribute C4 integer [1, 13]
+@attribute S5 integer [1, 4]
+@attribute C5 integer [1, 13]
+@attribute Class {positive, negative}
+@inputs S1, C1, S2, C2, S3, C3, S4, C4, S5, C5
+@outputs Class

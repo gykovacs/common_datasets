@@ -1,0 +1,29 @@
+Glass Identification (Imbalanced: 0-1-6 vs 2) data set
+
+1: Description.
+
+A imbalanced version of the Glass data set, where the possitive examples belong to class 2 and the negative examples belong to classes 0, 1 and 6.
+
+2: Type.			Imbalanced	
+3: Origin.			Real world
+4: Instances.		192
+5: Features.		9
+6: Classes.			2	
+7: Missing values.	No
+8: IR: 				10.29
+
+9: Header.
+
+@relation glass-0-1-6_vs_2
+@attribute RI real [1.51130946, 1.53393]
+@attribute Na real [10.73, 15.79065]
+@attribute Mg real [0.0, 4.49]
+@attribute Al real [0.29, 2.88047]
+@attribute Si real [69.81, 75.1804]
+@attribute K real [0.0, 2.70135]
+@attribute Ca real [5.43, 16.19]
+@attribute Ba real [0.0, 3.15]
+@attribute Fe real [0.0, 0.51]
+@attribute Class {positive,negative}
+@input RI,Na,Mg,Al,Si,K,Ca,Ba,Fe
+@output Class

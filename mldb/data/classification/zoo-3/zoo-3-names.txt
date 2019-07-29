@@ -1,0 +1,36 @@
+Zoo (Imbalanced: 3 vs rest) data set
+
+1: Description.
+
+An imbalanced version of the Zoo data set, where the possitive examples belong to the class 3 and the negative examples belong to the rest of the classes.
+
+2: Type.				Imbalanced
+3: Origin.				Laboratory
+4: Instances.			101
+5: Features.			16
+6: Classes.				2
+7: Missing values.		No
+8: IR:					19,2
+
+9: Header.
+
+@relation zoo-3
+@attribute Hair {0, 1}
+@attribute Feathers {0, 1}
+@attribute Eggs {0, 1}
+@attribute Milk {0, 1}
+@attribute Airborne {0, 1}
+@attribute Aquatic {0, 1}
+@attribute Predator {0, 1}
+@attribute Toothed {0, 1}
+@attribute Backbone {0, 1}
+@attribute Breathes {0, 1}
+@attribute Venomous {0, 1}
+@attribute Fins {0, 1}
+@attribute Legs {0, 2, 4, 5, 6, 8}
+@attribute Tail {0, 1}
+@attribute Domestic {0, 1}
+@attribute Catsize {0, 1}
+@attribute Class {positive, negative}
+@inputs Hair, Feathers, Eggs, Milk, Airborne, Aquatic, Predator, Toothed, Backbone, Breathes, Venomous, Fins, Legs, Tail, Domestic, Catsize
+@outputs Class

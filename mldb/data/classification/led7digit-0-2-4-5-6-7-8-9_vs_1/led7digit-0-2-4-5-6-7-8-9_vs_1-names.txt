@@ -1,0 +1,27 @@
+LED Display Domain (Imbalanced: 0-2-4-5-6-7-8-9 vs 1) data set
+
+1: Description.
+
+A imbalanced version of the LED Display Domain data set, where the possitive examples belong to classes 0, 2, 4, 5, 6, 7, 8 and 9 and the negative examples belong to the class 1.
+
+2: Type.				Imbalanced
+3: Origin.				Real world
+4: Instances.			443
+5: Features.			7
+6: Classes.				2
+7: Missing values.		No
+8: IR:					10,97
+
+9: Header.
+
+@relation led7digit-0-2-4-5-6-7-8-9_vs_1
+@attribute Led1 real [0.0, 1.0]
+@attribute Led2 real [0.0, 1.0]
+@attribute Led3 real [0.0, 1.0]
+@attribute Led4 real [0.0, 1.0]
+@attribute Led5 real [0.0, 1.0]
+@attribute Led6 real [0.0, 1.0]
+@attribute Led7 real [0.0, 1.0]
+@attribute number {positive, negative}
+@inputs Led1, Led2, Led3, Led4, Led5, Led6, Led7
+@outputs number

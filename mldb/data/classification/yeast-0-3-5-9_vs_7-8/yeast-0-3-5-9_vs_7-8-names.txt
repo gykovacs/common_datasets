@@ -1,0 +1,28 @@
+Yeast (Imbalanced: 0-3-5-9 vs 7-8) data set
+
+1: Description.
+
+A imbalanced version of the Yeast data set, where the possitive examples belong to classes MIT, ME1, ME3 and ERL and the negative examples belong to the classes VAC and POX.
+
+2: Type.				Imbalanced
+3: Origin.				Real world
+4: Instances.			506
+5: Features.			8
+6: Classes.				2
+7: Missing values.		No
+8: IR:					9,12
+
+9: Header.
+
+@relation yeast-0-3-5-9_vs_7-8
+@attribute mcg real [0.2, 1.0]
+@attribute gvh real [0.14, 1.0]
+@attribute alm real [0.21, 0.72]
+@attribute mit real [0.08, 0.87]
+@attribute erl real [0.5, 1.0]
+@attribute pox real [0.0, 0.83]
+@attribute vac real [0.26, 0.69]
+@attribute nuc real [0.11, 0.83]
+@attribute class {positive, negative}
+@inputs mcg, gvh, alm, mit, erl, pox, vac, nuc
+@outputs class

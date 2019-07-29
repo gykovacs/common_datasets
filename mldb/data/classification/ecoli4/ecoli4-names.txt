@@ -1,0 +1,27 @@
+Ecoli (Imbalanced: 4) data set
+
+1: Description.
+
+A imbalanced version of the Ecoli data set, where the possitive examples belong to class om and the negative examples belong to the rest.
+
+2: Type.			Imbalanced	
+3: Origin.			Real world
+4: Instances.		336
+5: Features.		7
+6: Classes.			2	
+7: Missing values.	No
+8: IR: 				13.84
+
+9: Header.
+
+@relation ecoli4
+@attribute Mcg real [0.0, 0.89]
+@attribute Gvh real [0.16, 1.0]
+@attribute Lip real [0.48, 1.0]
+@attribute Chg real [0.5, 1.0]
+@attribute Aac real [0.0, 0.88]
+@attribute Alm1 real [0.03, 1.0]
+@attribute Alm2 real [0.0, 0.99]
+@attribute Class {positive, negative}   
+@inputs Mcg, Gvh, Lip, Chg, Aac, Alm1, Alm2
+@outputs Class

@@ -1,0 +1,31 @@
+White Wine Quality (Imbalanced: 3-9 vs 5) data set
+
+1: Description.
+
+An imbalanced version of the White Wine Quality data set, where the possitive examples belong to the classes 3-9 and the negative examples belong to the class 5.
+
+2: Type.				Imbalanced
+3: Origin.				Laboratory
+4: Instances.			1482
+5: Features.			11
+6: Classes.				2
+7: Missing values.		No
+8: IR:					58,28
+
+9: Header.
+
+@relation winequality-white-3-9_vs_5
+@attribute FixedAcidity real [3.8, 14.2]
+@attribute VolatileAcidity real [0.08, 1.1]
+@attribute CitricAcid real [0.0, 1.66]
+@attribute ResidualSugar real [0.6, 65.8]
+@attribute Chlorides real [0.009, 0.346]
+@attribute FreeSulfurDioxide real [2.0, 289.0]
+@attribute TotalSulfurDioxide real [9.0, 440.0]
+@attribute Density real [0.98711, 1.03898]
+@attribute PH real [2.72, 3.82]
+@attribute Sulphates real [0.22, 1.08]
+@attribute Alcohol real [8.0, 14.2]
+@attribute Class {positive, negative}
+@inputs FixedAcidity, VolatileAcidity, CitricAcid, ResidualSugar, Chlorides, FreeSulfurDioxide, TotalSulfurDioxide, Density, PH, Sulphates, Alcohol
+@outputs Class

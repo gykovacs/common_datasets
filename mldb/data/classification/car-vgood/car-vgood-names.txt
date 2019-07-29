@@ -1,0 +1,26 @@
+Car Evaluation (Imbalanced: vgood vs rest) data set
+
+1: Description.
+
+An imbalanced version of the Car Evaluation data set, where the possitive examples belong to the class vgood and the negative examples to the rest of the classes.
+
+2: Type.				Imbalanced
+3: Origin.				Laboratory
+4: Instances.			1728
+5: Features.			6
+6: Classes.				2
+7: Missing values.		No
+8: IR:					25,58
+
+9: Header.
+
+@relation car-vgood
+@attribute Buying {vhigh, high, med, low}
+@attribute Maint {vhigh, high, med, low}
+@attribute Doors {2, 3, 4, 5more}
+@attribute Persons {2, 4, more}
+@attribute Lug_boot {small, med, big}
+@attribute Safety {low, med, high}
+@attribute Class {positive, negative}
+@inputs Buying, Maint, Doors, Persons, Lug_boot, Safety
+@outputs Class

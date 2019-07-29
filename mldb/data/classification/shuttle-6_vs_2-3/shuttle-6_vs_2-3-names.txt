@@ -1,0 +1,29 @@
+Statlog - Shuttle (Imbalanced: 6 vs 2-3) data set
+
+1: Description.
+
+An imbalanced version of the Statlog - Shuttle data set, where the possitive examples belong to the class 6 and the negative examples belong to the classes 2-3.
+
+2: Type.				Imbalanced
+3: Origin.				Laboratory
+4: Instances.			230
+5: Features.			9
+6: Classes.				2
+7: Missing values.		No
+8: IR:					22
+
+9: Header.
+
+@relation shuttle-6_vs_2-3
+@attribute A1 integer [27, 126]
+@attribute A2 integer [-4821, 5075]
+@attribute A3 integer [21, 149]
+@attribute A4 integer [-3939, 3830]
+@attribute A5 integer [-188, 436]
+@attribute A6 integer [-26739, 15164]
+@attribute A7 integer [-48, 105]
+@attribute A8 integer [-353, 270]
+@attribute A9 integer [-356, 266]
+@attribute Class {positive, negative}
+@inputs A1, A2, A3, A4, A5, A6, A7, A8, A9
+@outputs Class

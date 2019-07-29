@@ -1,0 +1,29 @@
+Statlog (Shuttle) (Imbalanced: 0 vs 4) data set
+
+1: Description.
+
+A imbalanced version of the Shuttle data set, where the possitive examples belong to class 0 and the negative examples belong to class 4.
+
+2: Type.			Imbalanced	
+3: Origin.			Real world
+4: Instances.		1829
+5: Features.		9
+6: Classes.			2	
+7: Missing values.	No
+8: IR: 				13.87
+
+9: Header.
+
+@relation shuttle-c0-vs-c4
+@attribute A1 integer [36, 123]
+@attribute A2 integer [-908, 1409]
+@attribute A3 integer [74, 113]
+@attribute A4 integer [-587, 2565]
+@attribute A5 integer [-46, 436]
+@attribute A6 integer [-898, 6339]
+@attribute A7 integer [-18, 72]
+@attribute A8 integer [-353, 130]
+@attribute A9 integer [-356, 126]
+@attribute Class {positive, negative}
+@input A1,A2,A3,A4,A5,A6,A7,A8,A9
+@output Class
