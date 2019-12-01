@@ -27,7 +27,8 @@ __all__=['encode_features',
          'construct_return_set',
          'read_csv_data',
          'read_arff_data',
-         'read_xls_data']
+         'read_xls_data',
+         'references']
 
 _logger= logging.getLogger('mldb')
 _logger.setLevel(logging.INFO)
@@ -35,7 +36,7 @@ _logger_ch= logging.StreamHandler()
 _logger_ch.setFormatter(logging.Formatter("%(asctime)s:%(levelname)s:%(message)s"))
 _logger.addHandler(_logger_ch)
 
-citations= {
+references= {
 'krnn': """@article{krnn,
 author={X. J. Zhang and Z. Tari and M. Cheriet},
 title={{KRNN}: k {Rare-class Nearest Neighbor} classification},
@@ -65,152 +66,210 @@ institution = "University of California, Irvine, School of Information and Compu
 """
 }
 
-def encode_column_onehot(column):
-    """
-    Applies one-hot encoding to a column.
-    
-    Args:
-        column (pd.Series): the column to be encoded
-    
-    Returns:
-        np.ndarray: the encoded column
-    """
-    ohencoder= OneHotEncoder(sparse= False, categories='auto').fit(column.values.reshape(-1, 1))
-    ohencoded= ohencoder.transform(column.values.reshape(-1, 1))
-    
-    return ohencoded.astype(float)
+import logging
 
-def encode_column_ordinal(column):
-    """
-    Applies ordinal encoding to a column.
+import numpy as np
+import pandas as pd
+
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import make_pipeline, Pipeline
+from sklearn.preprocessing import StandardScaler, OrdinalEncoder, OneHotEncoder
+
+class SimpleImputer(BaseEstimator, TransformerMixin):
+    def __init__(self, strategy, missing_values, add_indicator=False):
+        self.strategy=strategy
+        self.missing_values=missing_values
+        self.add_indicator=add_indicator
     
-    Args:
-        column (pd.Series): the column to be encoded
+    def fit(self, X, y=None):
+        X= X.values
+        self.indicator_needed= np.sum([np.sum((X == m)) for m in self.missing_values]) > 0
+        return self
+
+    def transform(self, X, y=None):
+        X= X.values
+        missing_mask= (X == self.missing_values[0])
+        for m in self.missing_values[1:]:
+            missing_mask= np.logical_or(missing_mask, (X == m))
+        if self.strategy == 'median':
+            fill_value= np.median(X[np.logical_not(missing_mask)])
+        elif self.strategy == 'most_frequent':
+            values, counts= np.unique(X[np.logical_not(missing_mask)], return_counts=True)
+            fill_value= values[np.argmax(counts)]
         
-    Returns:
-        np.array: the encoded column
-    """
-    oencoder= OrdinalEncoder(categories='auto').fit(column.values.reshape(-1, 1))
-    return oencoder.transform(column.values.reshape(-1, 1)).astype(float)[:,0]
+        X[missing_mask]= fill_value
+        if self.indicator_needed:
+            indicator= missing_mask.astype(float)
+            X= np.c_[X, indicator]
+        
+        return X
 
-def encode_column_median(column, missing_values):
-    """
-    Replaces missing values in the column by medians.
-    
-    Args:
-        column (pd.Series): the column to be encoded
-    Returns:
-        np.array: the encoded, missing-value-free column
-    """
-    column= copy.deepcopy(column)
-    if np.sum(column.isin(missing_values)) > 0:
-        column[column.isin(missing_values)]= np.median(column[~column.isin(missing_values)].astype(float))
-    column= column.astype(float)
-    return column.values
+    def fit_transform(self, X, y=None):
+        return self.fit(X).transform(X)
 
-def encode_features(data, target= 'target', encoding_threshold= 5, missing_values= ['?', None, 'None'], problem_type= 'imbalanced', verbose= True):
-    """
-    Automated feature encoding
+class ClassLabelEncoder(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
     
-    Args:
-        data (pd.DataFrame): pd.DataFrame containing the dataset
-        target (str): name of the target label
-        encoding_threshold (int): the number of distinct values at or below one-hot encoding is applied
-        missing_values (list): the list of missing value placeholders
-        problem_type (str): 'imbalanced'/'multiclass'/'regression'/'clustering'
-        verbose (boolean): True for verbose output
-    Returns:
-        pd.DataFrame: the encoded dataset
-    """
-    if verbose:
-        logging.getLogger('mldb').setLevel(logging.INFO)
-    else:
-        logging.getLogger('mldb').setLevel(logging.WARNING)
+    def transform(self, X, y=None):
+        values, counts= np.unique(X, return_counts=True)
+        pairs= list(zip(values, counts))
+        pairs= sorted(pairs, key=lambda x: -x[1])
+
+        masks= {}
+        for i in range(len(pairs)):
+            masks[i]= (X == pairs[i][0])
+
+        for i in masks:
+            X[masks[i]]= i
+        
+        return X.astype(int)
+
+class EncoderAndImputer(BaseEstimator, TransformerMixin):
+    def __init__(self, 
+                    target_attribute= None,
+                    problem_type='classification',
+                    onehot_limit= 10,
+                    numeric_strategy='median',
+                    onehot_strategy='most_frequent',
+                    ordinal_strategy='most_frequent',
+                    missing_values_numeric=[None, np.nan],
+                    missing_values_string=['?', None, 'None']):
+        self.target_attribute=target_attribute
+        self.problem_type=problem_type
+        self.onehot_limit= onehot_limit
+        self.numeric_strategy=numeric_strategy
+        self.onehot_strategy=onehot_strategy
+        self.ordinal_strategy=ordinal_strategy
+        self.missing_values_numeric= missing_values_numeric
+        self.missing_values_string=missing_values_string
     
-    columns= []
-    column_names= []
-    
-    for c in data.columns:
-        logging.info('Encoding column %s' % c)
-        if not c == target:
-            # if the column is not the target variable
-            n_values= len(np.unique(data[c]))
-            logging.info(' number of values: %d => ' % n_values)
-            
-            convertible_to_float= False
-            try:
-                data[c][~data[c].isin(missing_values)].astype(float)
-                convertible_to_float= True
-            except:
-                pass
-            
-            if n_values == 1:
-                # there is no need for encoding
-                logging.info('no encoding')
-                continue
-            if (n_values == 2 or data[c].dtype == object) and convertible_to_float is False:
-                # applying label encoding
-                logging.info('ordinal encoding')
-                columns.append(encode_column_ordinal(data[c]))
-                column_names.append(c)
-            elif n_values < encoding_threshold:
-                # applying one-hot encoding
-                logging.info('one-hot encoding')
-                ohencoded= encode_column_onehot(data[c])
-                for i in range(ohencoded.shape[1]):
-                    columns.append(ohencoded[:,i])
-                    column_names.append(str(c) + '_onehot_' + str(i))
-            else:
-                # applying median encoding
-                logging.info('no encoding, missing values replaced by medians')
-                columns.append(encode_column_median(data[c], missing_values))
-                column_names.append(c)
-                
-        if c == target:
-            if problem_type == 'imbalanced':
-                # in the target column the least frequent value is set to 1, the
-                # rest is set to 0
-                logging.info(' target variable => least frequent value is set to 1')
-                column= copy.deepcopy(data[c])
-                val_counts= data[target].value_counts()
-                if val_counts.values[0] < val_counts.values[1]:
-                    mask= (column == val_counts.index[0])
-                    column[mask]= 1
-                    column[~(mask)]= 0
+    def fit(self, X, column_specifications=None):
+        self.encoders= {}
+        self.imputers= {}
+
+        for c in X.columns:
+            n_uniques= len(pd.unique(X[c]))
+            if n_uniques > 1:
+                if not self.target_attribute or (self.target_attribute and not c == self.target_attribute):
+                    if np.issubdtype(X[c].dtype, np.number) or (column_specifications and column_specifications[c] == 'numeric'):
+                        logging.info("%s: %s" % (c, 'numeric'))
+                        self.imputers[c]= SimpleImputer(strategy="median", add_indicator=True, missing_values=self.missing_values_numeric)
+                        self.encoders[c]= StandardScaler()
+                    elif np.issubdtype(X[c].dtype, np.dtype(object).type):
+                        if n_uniques > 2 and n_uniques <= self.onehot_limit or (column_specifications and column_specifications[c] == 'onehot'):
+                            logging.info("%s: %s" % (c, 'onehot'))
+                            self.imputers[c]= SimpleImputer(strategy='most_frequent', add_indicator=True, missing_values=self.missing_values_string)
+                            self.encoders[c]= OneHotEncoder()
+                        else:
+                            logging.info("%s: %s" % (c, 'ordinal'))
+                            self.imputers[c]= SimpleImputer(strategy='most_frequent', add_indicator=True, missing_values=self.missing_values_string)
+                            self.encoders[c]= OrdinalEncoder()
+                    else:
+                        logging.info("%s: %s" % (c, 'no encoding'))
+                        self.imputers[c]= None
+                        self.encoders[c]= None
                 else:
-                    mask= (column == val_counts.index[0])
-                    column[mask]= 0
-                    column[~(mask)]= 1
+                    if self.target_attribute:
+                        if self.problem_type == 'regression':
+                            logging.info("%s: %s" % (c, 'regression target encoding'))
+                            self.target_imputer= SimpleImputer(strategy='median', add_indicator=False, missing_values= [None, np.nan])
+                            self.target_encoder= None
+                        elif self.problem_type == 'classification':
+                            logging.info("%s: %s" % (c, 'classification target encoding'))
+                            self.target_imputer= SimpleImputer(strategy='most_frequent', add_indicator=False, missing_values= [None])
+                            self.target_encoder= ClassLabelEncoder()
+                    else:
+                        logging.info("%s: %s" % (c, 'no values'))
+
+        for c in self.encoders:
+            logging.info("fitting encoder for attribute %s" % c)
+            if self.encoders[c]:
+                if np.issubdtype(X[c].dtype, np.dtype(object).type):
+                    imputed= self.imputers[c].fit_transform(X[[c]].astype(str))
+                    self.encoders[c].fit(imputed[:,[0]].astype(str))
+                else:
+                    imputed= self.imputers[c].fit_transform(X[[c]])
+                    self.encoders[c].fit(imputed[:,[0]])
+        
+        if self.target_attribute:
+            if self.target_imputer:
+                if np.issubdtype(X[self.target_attribute].dtype, np.dtype(object).type):
+                    imputed= self.target_imputer.fit_transform(X[[self.target_attribute]].astype(str))
+                    if self.target_encoder:
+                        self.target_encoder.fit(imputed)
+                else:
+                    imputed= self.target_imputer.fit_transform(X[[self.target_attribute]])
+                    if self.target_encoder:
+                        self.target_encoder.fit(imputed)
+
+        return self
     
-                columns.append(column.astype(int).values)
-                column_names.append(target)
-            elif problem_type == 'multiclass':
-                logging.info('multiclass encoding of target variable')
-                columns.append(LabelEncoder().fit_transform(data[c]).astype(int))
-                column_names.append(target)
-            elif problem_type == 'regression':
-                columns.append(data[c].values)
-                column_names.append(target)
-            elif problem_type == 'clustering':
-                pass
+    def transform(self, X):
+        X_enc, cols= [], []
+        for c in self.encoders:
+            if self.encoders[c]:
+                if np.issubdtype(X[c].dtype, np.dtype(object).type):
+                    imputed= self.imputers[c].transform(X[[c]].astype(str))
+                    if isinstance(self.encoders[c], OneHotEncoder):
+                        encoded= self.encoders[c].transform(imputed[:,[0]]).todense()
+                    else:
+                        encoded= self.encoders[c].transform(imputed[:,[0]])
+                else:
+                    imputed= self.imputers[c].transform(X[[c]])
+                    if isinstance(self.encoders[c], OneHotEncoder):
+                        encoded= self.encoders[c].transform(imputed[:,[0]]).todense()
+                    else:
+                        encoded= self.encoders[c].transform(imputed[:,[0]])
+                X_enc.append(encoded)
+                if encoded.shape[1] > 1:
+                    cols.extend([str(c) + "_onehot_" + str(i) for i in range(encoded.shape[1])])
+                else:
+                    cols.append(c)
+                if imputed.shape[1] == 2:
+                    X_enc.append(imputed[:,[1]])
+                    cols.append(str(c) + '_missing_value_indicator')
             else:
-                raise ValueError('Problem type "%s" not implemented' % problem_type)
+                X_enc.append(X[[c]].values)
+                cols.append(c)
+        
+        data= np.hstack(X_enc)
+
+        if hasattr(self, 'scaler'):
+            data= self.scaler.transform(data)
+        else:
+            self.scaler= StandardScaler()
+            data= self.scaler.fit_transform(data)
+        
+        data= pd.DataFrame(data, columns=cols)
+        
+        if self.target_attribute:
+            if np.issubdtype(X[self.target_attribute].dtype, np.dtype(object).type):
+                imputed= self.target_imputer.transform(X[[self.target_attribute]].astype(str))
+            else:
+                imputed= self.target_imputer.transform(X[[self.target_attribute]])
+            if self.target_encoder:
+                encoded= self.target_encoder.transform(imputed)
+            else:
+                encoded= imputed
+
+            data[self.target_attribute]= encoded
+        
+        return data
     
-    dataset= pd.DataFrame(np.vstack(columns).T, columns= column_names)
-    if problem_type == 'imbalanced' or problem_type == 'multiclass':
-        dataset[target]= dataset[target].astype(int)
-    return dataset
+    def fit_transform(self, X):
+        return self.fit(X).transform(X)
 
 def construct_return_set(database, 
                          descriptor, 
                          return_X_y, 
                          encode, 
-                         encoding_threshold= 5, 
-                         problem_type= 'imbalanced',
+                         problem_type= 'classification',
                          target_name= 'target',
                          citation= None, 
                          name= None,
-                         verbose= True):
+                         verbose= True,
+                         onehot_threshold= 10):
     
     """
     Constructs the return set of the database
@@ -221,7 +280,7 @@ def construct_return_set(database,
         return_X_y (boolean): if True, only the independent and dependent features are returned
         encode (boolean): if True, encoding is applied
         encoding_threshold (int): the threshold of one-hot/ordinal encoding
-        problem_type (str): 'imbalanced'/'multiclass'/'regression'/'clustering'
+        problem_type (str): 'classification'/'regression'/'clustering'
         target_name (str): name of the target variable
         citation (str): citation to include
         name (str): name to include
@@ -235,19 +294,30 @@ def construct_return_set(database,
         return database.drop(target_name, axis= 'columns').values, database[target_name].values
     
     if encode == True:
-        database= encode_features(database, encoding_threshold= encoding_threshold, verbose= verbose, problem_type=problem_type)
-        for c in database.columns:
+        database_encoded= EncoderAndImputer(onehot_limit=onehot_threshold, problem_type=problem_type, target_attribute='target').fit_transform(database)
+        for c in database_encoded.columns:
             if not c is target_name:
-                database[c]= database[c].astype(float)
+                database_encoded[c]= database_encoded[c].astype(float)
+        
         if return_X_y == True:
-            return database.drop(target_name, axis= 'columns').values, database[target_name].values
+            return database_encoded.drop(target_name, axis= 'columns').values, database_encoded[target_name].values
 
     descriptors= {}
     descriptors['DESCR']= descriptor
-    features= database.drop(target_name, axis= 'columns')
-    descriptors['data']= features.values
-    descriptors['feature_names']= list(features.columns)
-    descriptors['target']= database[target_name].values
+    if encode == True:
+        features= database_encoded.drop(target_name, axis= 'columns')
+        descriptors['data']= features.values
+        descriptors['feature_names']= list(features.columns)
+        descriptors['target']= database_encoded[target_name].values
+        features= database.drop(target_name, axis='columns')
+        descriptors['data_raw']= features.values
+        descriptors['feature_names_raw']= list(features.columns)
+        descriptors['target_raw']= database[target_name].values
+    else:
+        features= database.drop(target_name, axis='columns')
+        descriptors['data']= features.values
+        descriptors['feature_names']= list(features.columns)
+        descriptors['target']= database[target_name].values
     descriptors['citation']= citation
     descriptors['name']= name
     
