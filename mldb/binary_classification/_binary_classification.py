@@ -1331,12 +1331,11 @@ def get_data_loaders(subset='all'):
                                     n_minority_bounds= n_minority_bounds,
                                     imbalance_ratio_bounds= imbalance_ratio_bounds)
 
-summary_columns= ['n_attr_encoded', 'imbalance_ratio', 'imbalance_ratio_dist', 'n',
-        'loader_function', 'mean_maj_dist', 'mean_min_dist', 'n_minority',
-        'name', 'n_attr_raw', 'reference_key']
+summary_columns= ['imbalance_ratio', 'imbalance_ratio_dist', 'loader_function',
+       'mean_maj_dist', 'mean_min_dist', 'n', 'n_attr_encoded', 'n_attr_raw',
+       'n_minority', 'name', 'reference_key']
 
-summary_table= np.array([
-       [3.03, 0.94, 'load_ada', 1.89, 2.02, 4147, 47, 48, 1029, 'ADA', 'krnn'],
+summary_table= np.array([[3.03, 0.94, 'load_ada', 1.89, 2.02, 4147, 47, 48, 1029, 'ADA', 'krnn'],
        [9.16, 0.33, 'load_cm1', 0.75, 2.25, 498, 21, 21, 49, 'CM1', 'krnn'],
        [2.33, 0.87, 'load_german', 5.51, 6.34, 1000, 59, 20, 300, 'german', 'krnn'],
        [3.84, 0.71, 'load_hepatitis', 4.23, 5.96, 155, 44, 19, 32, 'hepatitis', 'krnn'],
