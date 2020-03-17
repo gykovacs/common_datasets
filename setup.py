@@ -39,7 +39,5 @@ setup(name='mldb',
 		    'mldb.clustering': 'mldb/clustering',
 		    'mldb.binary_classification': 'mldb/binary_classification',
 		    'mldb.multiclass_classification': 'mldb/multiclass_classification'},
-      package_data= {'mldb': ['data/*/*']},
-      tests_require= ['nose'],
-      test_suite= 'nose.collector'
+      package_data= {'mldb': ['mldb/data/*/*']}
       )
