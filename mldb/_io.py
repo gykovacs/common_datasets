@@ -331,9 +331,9 @@ def read_csv_data(filename, sep= ',', usecols= None, header= None, delim_whitesp
 
 def read_xls_data(filename, header= None, sheet_name= None):
     if sheet_name is None:
-        return pd.read_excel(io.BytesIO(pkgutil.get_data('mldb', filename)))
+        return pd.read_excel(io.BytesIO(pkgutil.get_data('mldb', filename)), engine='openpyxl')
     else:
-        return pd.read_excel(io.BytesIO(pkgutil.get_data('mldb', filename)), sheet_name= sheet_name)
+        return pd.read_excel(io.BytesIO(pkgutil.get_data('mldb', filename)), sheet_name= sheet_name, engine='openpyxl')
 
 def read_arff_data(filename, sep= ',', usecols= None):
     if sys.version_info >= (3,0):
