@@ -64,8 +64,6 @@ jobs:
           name: Run tests and collect coverage
           command: pytest --cov tests
 
-      - codecov/upload
-
       - store_artifacts:
           path: test-reports
           destination: test-reports
