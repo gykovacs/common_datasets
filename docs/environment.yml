@@ -1,4 +1,4 @@
-name: smote-variants
+name: mldb
 
 channels:
     - anaconda

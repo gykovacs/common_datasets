@@ -58,7 +58,13 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            coverage run --source smote_variants -m pytest tests
+            coverage run --source mldb -m pytest tests
+
+      - run:
+          name: Run tests and collect coverage
+          command: pytest --cov tests
+
+      - codecov/upload
 
       - store_artifacts:
           path: test-reports
