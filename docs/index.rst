@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to common_datasets's documentation!
-==========================================
+===========================================
 
 .. toctree::
    :maxdepth: 1

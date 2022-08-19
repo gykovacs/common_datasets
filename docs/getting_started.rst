@@ -2,7 +2,7 @@ Getting Started
 ***************
 
 What is ``common_datasets``?
-=================
+============================
 
 This package provides an unofficial collection of datasets widely used in the evaluation of machine learning
 techniques, mainly small and imbalanced datasets for binary, multiclass classification and regression. The
