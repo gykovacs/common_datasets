@@ -4,3 +4,5 @@ mldb/__pycache__/*
 */__pycache__/*
 */*/__pycache__/*
 docs/_build/*
+.coverage
+dist/*
