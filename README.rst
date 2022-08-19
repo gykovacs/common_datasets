@@ -1,24 +1,24 @@
 |CircleCI|_ |GitHub|_ |Codecov|_ |ReadTheDocs|_ |PythonVersion|_ |PyPi|_
 
-.. |CircleCI| image:: https://circleci.com/gh/gykovacs/mldatasets.svg?style=svg
-.. _CircleCI: https://circleci.com/gh/gykovacs/mldatasets
+.. |CircleCI| image:: https://circleci.com/gh/gykovacs/common_datasets.svg?style=svg
+.. _CircleCI: https://circleci.com/gh/gykovacs/common_datasets
 
-.. |GitHub| image:: https://github.com/gykovacs/mldatasets/workflows/Python%20package/badge.svg?branch=master
-.. _GitHub: https://github.com/gykovacs/mldatasets/workflows/Python%20package/badge.svg?branch=master
+.. |GitHub| image:: https://github.com/gykovacs/common_datasets/workflows/Python%20package/badge.svg?branch=master
+.. _GitHub: https://github.com/gykovacs/common_datasets/workflows/Python%20package/badge.svg?branch=master
 
-.. |Codecov| image:: https://codecov.io/gh/gykovacs/mldatasets/branch/master/graph/badge.svg?token=GQNNasvi4z
-.. _Codecov: https://codecov.io/gh/gykovacs/mldatasets
+.. |Codecov| image:: https://codecov.io/gh/gykovacs/common_datasets/branch/master/graph/badge.svg?token=GQNNasvi4z
+.. _Codecov: https://codecov.io/gh/gykovacs/common_datasets
 
-.. |ReadTheDocs| image:: https://readthedocs.org/projects/mldatasets/badge/?version=latest
-.. _ReadTheDocs: https://mldatasets.readthedocs.io/en/latest/?badge=latest
+.. |ReadTheDocs| image:: https://readthedocs.org/projects/common_datasets/badge/?version=latest
+.. _ReadTheDocs: https://common_datasets.readthedocs.io/en/latest/?badge=latest
 
 .. |PythonVersion| image:: https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-brightgreen
 .. _PythonVersion: https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-brightgreen
 
-.. |PyPi| image:: https://badge.fury.io/py/mldatasets.svg
-.. _PyPi: https://badge.fury.io/py/mldatasets
+.. |PyPi| image:: https://badge.fury.io/py/common_datasets.svg
+.. _PyPi: https://badge.fury.io/py/common_datasets
 
-mldatasets: machine learning datasets
+common_datasets: machine learning datasets
 ###############################
 
 This package provides an unofficial collection of datasets widely used in the evaluation of machine learning
@@ -68,7 +68,7 @@ For example:
 .. code-block:: python
 
   # binary classification
-  >> import mldatasets.binary_classification as binclas
+  >> import common_datasets.binary_classification as binclas
 
   >> dataset = bin_clas.load_abalone19()
   >> dataset['citation_key']
@@ -87,7 +87,7 @@ The package can be cloned from GitHub in the usual way, and the latest stable ve
 
 .. code-block:: bash
 
-  pip install mldatasets
+  pip install common_datasets
 
 Use cases
 *********
@@ -98,17 +98,17 @@ Loading a dataset
 .. code-block:: python
 
   # binary classification
-  import mldatasets.binary_classification as binclas
+  import common_datasets.binary_classification as binclas
 
   dataset = binclas.load_abalone19()
 
   # multiclass classification
-  import mldatasets.multiclass_classification as multclas
+  import common_datasets.multiclass_classification as multclas
 
   dataset = multclas.load_abalone()
 
   # regression
-  from mldatasets import regression
+  from common_datasets import regression
 
   dataset = regression.load_treasury()
 
@@ -118,21 +118,21 @@ Querying all dataset loaders and loading a dataset
 .. code-block:: python
 
   # binary classification
-  import mldatasets.binary_classification as binclas
+  import common_datasets.binary_classification as binclas
 
   data_loaders = binclas.get_data_loaders()
 
   dataset_0 = data_loaders[0]()
 
   # multiclass classification
-  import mldatasets.multiclass_classification as multclas
+  import common_datasets.multiclass_classification as multclas
 
   data_loaders = multclas.get_data_loaders()
 
   dataset_0 = data_loaders[0]()
 
   # regression
-  from mldatasets import regression
+  from common_datasets import regression
 
   data_loaders = regression.get_data_loaders()
 
@@ -144,21 +144,21 @@ Querying the loaders of the 5 smallest datasets regarding the total number of re
 .. code-block:: python
 
   # binary classification
-  import mldatasets.binary_classification as binclas
+  import common_datasets.binary_classification as binclas
 
   data_loaders = binclas.get_filtered_data_loaders(n_smallest=5, sorting='n')
 
   dataset_0 = data_loaders[0]()
 
   # multiclass classification
-  import mldatasets.multiclass_classification as multclas
+  import common_datasets.multiclass_classification as multclas
 
   data_loaders = multclas.get_data_loaders(n_smallest=5, sorting='n')
 
   dataset_0 = data_loaders[0]()
 
   # regression
-  from mldatasets import regression
+  from common_datasets import regression
 
   data_loaders = regression.get_data_loaders(n_smallest=5, sorting='n')
 
@@ -168,4 +168,4 @@ Querying the loaders of the 5 smallest datasets regarding the total number of re
 Documentation
 *************
 
-* For a detailed documentation and parameters of the functions see http://mldatasets.readthedocs.io.
+* For a detailed documentation and parameters of the functions see http://common_datasets.readthedocs.io.

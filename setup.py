@@ -5,28 +5,28 @@ def readme():
     with open('README.rst') as f:
         return f.read()
 
-version_file= os.path.join('mldatasets', '__version__.py')
+version_file= os.path.join('common_datasets', '__version__.py')
 __version__= "0.0.0"
 with open(version_file) as f:
     exec(f.read())
 
-setup(name='mldatasets',
+setup(name='common_datasets',
       version=__version__,
-      description='mldatasets',
+      description='common_datasets',
       long_description=readme(),
       classifiers=[
               'Development Status :: 3 - Alpha',
               'License :: OSI Approved :: MIT License',
               'Programming Language :: Python',
               'Topic :: Scientific/Engineering :: Artificial Intelligence'],
-      url='http://github.com/gykovacs/mldatasets',
+      url='http://github.com/gykovacs/common_datasets',
       author='Gyorgy Kovacs',
       author_email='gyuriofkovacs@gmail.com',
-      packages=['mldatasets',
-                'mldatasets.regression',
-                'mldatasets.clustering',
-                'mldatasets.binary_classification',
-                'mldatasets.multiclass_classification'],
+      packages=['common_datasets',
+                'common_datasets.regression',
+                'common_datasets.clustering',
+                'common_datasets.binary_classification',
+                'common_datasets.multiclass_classification'],
       install_requires=[
               'numpy',
               'pandas',
@@ -34,16 +34,16 @@ setup(name='mldatasets',
               'sklearn',
               'openpyxl'
               ],
-      #py_modules=['mldatasets',
-	#	    'mldatasets.regression',
-	#	    'mldatasets.clustering',
-	#	    'mldatasets.binary_classification',
-	#	    'mldatasets.multiclass_classification'],
+      #py_modules=['common_datasets',
+	#	    'common_datasets.regression',
+	#	    'common_datasets.clustering',
+	#	    'common_datasets.binary_classification',
+	#	    'common_datasets.multiclass_classification'],
       zip_safe=False,
-      package_dir= {'mldatasets': 'mldatasets',
-		    'mldatasets.regression': 'mldatasets/regression',
-		    'mldatasets.clustering': 'mldatasets/clustering',
-		    'mldatasets.binary_classification': 'mldatasets/binary_classification',
-		    'mldatasets.multiclass_classification': 'mldatasets/multiclass_classification'},
-      package_data= {'mldatasets': ['mldatasets/data/*/*']}
+      package_dir= {'common_datasets': 'common_datasets',
+		    'common_datasets.regression': 'common_datasets/regression',
+		    'common_datasets.clustering': 'common_datasets/clustering',
+		    'common_datasets.binary_classification': 'common_datasets/binary_classification',
+		    'common_datasets.multiclass_classification': 'common_datasets/multiclass_classification'},
+      package_data= {'common_datasets': ['common_datasets/data/*/*']}
       )

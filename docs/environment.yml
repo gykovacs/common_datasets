@@ -1,4 +1,4 @@
-name: mldatasets
+name: common_datasets
 
 channels:
     - anaconda

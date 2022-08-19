@@ -19,15 +19,15 @@ Install from PyPi
 
 .. code-block:: bash
 
-    > pip install mldatasets
+    > pip install common_datasets
 
 Clone from GitHub
 ^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
-    > git clone git@github.com:gykovacs/mldatasets.git
-    > cd mldatasets
+    > git clone git@github.com:gykovacs/common_datasets.git
+    > cd common_datasets
     > pip install .
 
 Install directly from GitHub
@@ -35,4 +35,4 @@ Install directly from GitHub
 
 .. code-block:: bash
 
-    > pip install git+https://github.com:gykovacs/mldatasets.git
+    > pip install git+https://github.com:gykovacs/common_datasets.git

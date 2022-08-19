@@ -6,7 +6,7 @@ import pytest
 
 from sklearn.tree import DecisionTreeClassifier
 
-import mldatasets.multiclass_classification as mult_clas
+import common_datasets.multiclass_classification as mult_clas
 
 loaders = [mult_clas.load_automobile,
             mult_clas.load_balance,

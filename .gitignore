@@ -1,6 +1,6 @@
-mldatasets.egg-info/*
-mldatasets/mldatasets.egg-info/*
-mldatasets/__pycache__/*
+common_datasets.egg-info/*
+common_datasets/common_datasets.egg-info/*
+common_datasets/__pycache__/*
 */__pycache__/*
 */*/__pycache__/*
 docs/_build/*
