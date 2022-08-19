@@ -1,4 +1,4 @@
-|CircleCI|_ |GitHub|_ |Codecov|_ |ReadTheDocs|_ |PythonVersion|_ |PyPi|_
+|CircleCI|_ |GitHub|_ |Codecov|_ |ReadTheDocs|_ |PythonVersion|_ |pylint|_ |PyPi|_
 
 .. |CircleCI| image:: https://circleci.com/gh/gykovacs/common_datasets.svg?style=svg
 .. _CircleCI: https://circleci.com/gh/gykovacs/common_datasets
@@ -14,6 +14,9 @@
 
 .. |PythonVersion| image:: https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-brightgreen
 .. _PythonVersion: https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-brightgreen
+
+.. |pylint| image:: https://img.shields.io/badge/pylint-10.0-green
+.. _pylint: https://img.shields.io/badge/pylint-10.0-green
 
 .. |PyPi| image:: https://badge.fury.io/py/common_datasets.svg
 .. _PyPi: https://badge.fury.io/py/common_datasets
