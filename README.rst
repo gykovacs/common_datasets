@@ -66,6 +66,7 @@ in which the dataset in the given configuration has been used is provided as par
 For example:
 
 .. code-block:: python
+
   # binary classification
   >> import mldb.binary_classification as binclas
 
