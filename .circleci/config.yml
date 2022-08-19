@@ -60,10 +60,6 @@ jobs:
             . venv/bin/activate
             coverage run --source mldb -m pytest tests
 
-      - run:
-          name: Run tests and collect coverage
-          command: pytest --cov tests
-
       - store_artifacts:
           path: test-reports
           destination: test-reports
