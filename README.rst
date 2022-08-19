@@ -1,7 +1,4 @@
-|TravisCI|_ |CircleCI|_ |GitHub|_ |Codecov|_ |ReadTheDocs|_ |PythonVersion|_ |PyPi|_ |License|_ |Gitter|_
-
-.. |TravisCI| image:: https://travis-ci.org/gykovacs/mldb.svg?branch=master
-.. _TravisCI: https://travis-ci.org/gykovacs/mldb
+|CircleCI|_ |GitHub|_ |Codecov|_ |ReadTheDocs|_ |PythonVersion|_ |PyPi|_
 
 .. |CircleCI| image:: https://circleci.com/gh/gykovacs/mldb.svg?style=svg
 .. _CircleCI: https://circleci.com/gh/gykovacs/mldb
@@ -69,6 +66,7 @@ in which the dataset in the given configuration has been used is provided as par
 For example:
 
 .. code-block:: python
+
   # binary classification
   >> import mldb.binary_classification as binclas
 
