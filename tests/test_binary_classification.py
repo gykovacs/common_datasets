@@ -8,7 +8,7 @@ import numpy as np
 
 from sklearn.tree import DecisionTreeClassifier
 
-import mldb.binary_classification as bin_clas
+import mldatasets.binary_classification as bin_clas
 
 loaders = [bin_clas.load_abalone_17_vs_7_8_9_10,
             bin_clas.load_abalone_19_vs_10_11_12_13,

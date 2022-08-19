@@ -2,7 +2,7 @@
 Testing the IO and encoding functionalities
 """
 
-from mldb._io import coalesce
+from mldatasets._io import coalesce
 
 def test_coalesce():
     """

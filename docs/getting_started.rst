@@ -1,7 +1,7 @@
 Getting Started
 ***************
 
-What is ``mldb``?
+What is ``mldatasets``?
 =================
 
 This package provides an unofficial collection of datasets widely used in the evaluation of machine learning

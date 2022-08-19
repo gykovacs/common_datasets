@@ -23,7 +23,7 @@ import os
 import sys
 sys.path.append(os.path.abspath('..'))
 
-project = 'mldb'
+project = 'mldatasets'
 copyright = '2022, György Kovács'
 author = 'György Kovács'
 
@@ -112,7 +112,7 @@ html_static_path = ['../docs/']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'mldbdoc'
+htmlhelp_basename = 'mldatasetsdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -139,7 +139,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'mldb.tex', 'mldb Documentation',
+    (master_doc, 'mldatasets.tex', 'mldatasets Documentation',
      'György Kovács', 'manual'),
 ]
 
@@ -149,7 +149,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'mldb', 'mldb Documentation',
+    (master_doc, 'mldatasets', 'mldatasets Documentation',
      [author], 1)
 ]
 
@@ -160,8 +160,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'mldb', 'mldb Documentation',
-     author, 'mldb', 'One line description of project.',
+    (master_doc, 'mldatasets', 'mldatasets Documentation',
+     author, 'mldatasets', 'One line description of project.',
      'Miscellaneous'),
 ]
 

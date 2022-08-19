@@ -38,7 +38,7 @@ __all__=['read_csv_data',
          'multiclass_label_preprocessing',
          'DataPreprocessor']
 
-_logger= logging.getLogger('mldb')
+_logger= logging.getLogger('mldatasets')
 _logger.setLevel(logging.INFO)
 _logger_ch= logging.StreamHandler()
 _logger_ch.setFormatter(logging.Formatter("%(asctime)s:%(levelname)s:%(message)s"))
@@ -210,12 +210,12 @@ def read_csv_data(filename,
         pd.DataFrame: the read data
     """
     if delim_whitespace:
-        return pd.read_csv(io.BytesIO(pkgutil.get_data('mldb', filename)),
+        return pd.read_csv(io.BytesIO(pkgutil.get_data('mldatasets', filename)),
                             header=header,
                             usecols=usecols,
                             delim_whitespace=delim_whitespace)
 
-    return pd.read_csv(io.BytesIO(pkgutil.get_data('mldb', filename)),
+    return pd.read_csv(io.BytesIO(pkgutil.get_data('mldatasets', filename)),
                         header=header,
                         usecols=usecols,
                         sep=sep)
@@ -232,10 +232,10 @@ def read_xls_data(filename, sheet_name= None):
         pd.DataFrame: the read data
     """
     if sheet_name is None:
-        return pd.read_excel(io.BytesIO(pkgutil.get_data('mldb', filename)),
+        return pd.read_excel(io.BytesIO(pkgutil.get_data('mldatasets', filename)),
                                 engine='openpyxl')
 
-    return pd.read_excel(io.BytesIO(pkgutil.get_data('mldb', filename)),
+    return pd.read_excel(io.BytesIO(pkgutil.get_data('mldatasets', filename)),
                             sheet_name= sheet_name,
                             engine='openpyxl')
 
@@ -249,7 +249,7 @@ def read_arff_data(filename):
     Returns:
         np.array, obj: the data and the metadata
     """
-    return arff.loadarff(io.StringIO(pkgutil.get_data('mldb', filename).decode('unicode_escape')))
+    return arff.loadarff(io.StringIO(pkgutil.get_data('mldatasets', filename).decode('unicode_escape')))
 
 def determine_types(dataframe):
     """

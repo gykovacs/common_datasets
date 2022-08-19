@@ -1,4 +1,4 @@
-name: mldb
+name: mldatasets
 
 channels:
     - anaconda

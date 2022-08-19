@@ -19,15 +19,15 @@ Install from PyPi
 
 .. code-block:: bash
 
-    > pip install mldb
+    > pip install mldatasets
 
 Clone from GitHub
 ^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
-    > git clone git@github.com:gykovacs/mldb.git
-    > cd mldb
+    > git clone git@github.com:gykovacs/mldatasets.git
+    > cd mldatasets
     > pip install .
 
 Install directly from GitHub
@@ -35,4 +35,4 @@ Install directly from GitHub
 
 .. code-block:: bash
 
-    > pip install git+https://github.com:gykovacs/mldb.git
+    > pip install git+https://github.com:gykovacs/mldatasets.git

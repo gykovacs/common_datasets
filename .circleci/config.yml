@@ -58,7 +58,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            coverage run --source mldb -m pytest tests
+            coverage run --source mldatasets -m pytest tests
 
       - store_artifacts:
           path: test-reports

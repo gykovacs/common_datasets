@@ -1,6 +1,6 @@
-mldb.egg-info/*
-mldb/mldb.egg-info/*
-mldb/__pycache__/*
+mldatasets.egg-info/*
+mldatasets/mldatasets.egg-info/*
+mldatasets/__pycache__/*
 */__pycache__/*
 */*/__pycache__/*
 docs/_build/*

@@ -6,7 +6,7 @@ import pytest
 
 from sklearn.tree import DecisionTreeRegressor
 
-from mldb import regression
+from mldatasets import regression
 
 loaders = [regression.load_diabetes,
            regression.load_laser,

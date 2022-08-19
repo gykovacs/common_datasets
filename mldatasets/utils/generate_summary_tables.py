@@ -4,9 +4,9 @@ import sys
 import numpy as np
 import pandas as pd
 
-import mldb.binary_classification
-import mldb.regression
-import mldb.multiclass_classification
+import mldatasets.binary_classification
+import mldatasets.regression
+import mldatasets.multiclass_classification
 
 logging.basicConfig(level=logging.INFO)
 
@@ -14,7 +14,7 @@ np.set_printoptions(threshold=sys.maxsize)
 np.set_printoptions(linewidth=200)
 np.set_printoptions(precision=2)
 
-columns, data= mldb.binary_classification.generate_summary_table()
+columns, data= mldatasets.binary_classification.generate_summary_table()
 
 for row in data:
     row[0]= np.round(row[0], 2)
@@ -24,10 +24,10 @@ for row in data:
 
 data
 
-columns, data= mldb.regression.generate_summary_table()
+columns, data= mldatasets.regression.generate_summary_table()
 
 data
 
-columns, data= mldb.multiclass_classification.generate_summary_table()
+columns, data= mldatasets.multiclass_classification.generate_summary_table()
 
 data
