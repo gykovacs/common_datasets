@@ -1,4 +1,4 @@
-|TravisCI|_ |CircleCI|_ |GitHub|_ |Codecov|_ |ReadTheDocs|_ |PythonVersion|_ |PyPi|_ |License|_ |Gitter|_
+|TravisCI|_ |CircleCI|_ |GitHub|_ |Codecov|_ |ReadTheDocs|_ |PythonVersion|_ |PyPi|_
 
 .. |TravisCI| image:: https://travis-ci.org/gykovacs/mldb.svg?branch=master
 .. _TravisCI: https://travis-ci.org/gykovacs/mldb
