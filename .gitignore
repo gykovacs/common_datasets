@@ -1,0 +1,6 @@
+mldb.egg-info/*
+mldb/mldb.egg-info/*
+mldb/__pycache__/*
+*/__pycache__/*
+*/*/__pycache__/*
+docs/_build/*

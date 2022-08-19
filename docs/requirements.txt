@@ -1,0 +1,6 @@
+joblib
+numpy>=1.16.0
+pandas
+scikit-learn
+statistics
+metric_learn

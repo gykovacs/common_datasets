@@ -1,0 +1,7 @@
+[BASIC]
+
+disable=duplicate-code
+
+[TYPECHECK]
+
+ignored-modules=numpy,scipy,pandas
