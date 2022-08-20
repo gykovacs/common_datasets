@@ -21,8 +21,7 @@
 .. |PyPi| image:: https://badge.fury.io/py/common_datasets.svg
 .. _PyPi: https://badge.fury.io/py/common_datasets
 
-
-common_datasets: common machine learning datasets
+common-datasets: common machine learning datasets
 #################################################
 
 This package provides an unofficial collection of datasets widely used in the evaluation of machine learning
