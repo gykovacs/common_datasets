@@ -34,16 +34,17 @@ setup(name='common_datasets',
               'sklearn',
               'openpyxl'
               ],
-      #py_modules=['common_datasets',
-	#	    'common_datasets.regression',
-	#	    'common_datasets.clustering',
-	#	    'common_datasets.binary_classification',
-	#	    'common_datasets.multiclass_classification'],
+      py_modules=['common_datasets',
+		    'common_datasets.regression',
+		    'common_datasets.clustering',
+		    'common_datasets.binary_classification',
+		    'common_datasets.multiclass_classification'],
       zip_safe=False,
       package_dir= {'common_datasets': 'common_datasets',
 		    'common_datasets.regression': 'common_datasets/regression',
 		    'common_datasets.clustering': 'common_datasets/clustering',
 		    'common_datasets.binary_classification': 'common_datasets/binary_classification',
 		    'common_datasets.multiclass_classification': 'common_datasets/multiclass_classification'},
-      package_data= {'common_datasets': ['common_datasets/data/*/*']}
+      package_data= {'common_datasets': ['data/*/*/*', 'common_datasets/data/*', 'common_datasets/data/data_level.txt']},
+      include_package_data=True
       )
