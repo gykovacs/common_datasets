@@ -397,7 +397,8 @@ def get_filtered_data_loaders(n_col_bounds=(1, 5000),
                               n_col_orig_bounds=(1, 5000),
                               n_bounds=(1, 10000),
                               n_smallest=-1,
-                              sorting=None):
+                              sorting=None,
+                              distinct_phenotypes=False):
     """
     Get filtered data loaders.
 
@@ -411,6 +412,8 @@ def get_filtered_data_loaders(n_col_bounds=(1, 5000),
         n_smallest (int): the number of smallest in the sense of "sorting"
         sorting (str): the sorting attribute ('n', 'n_col', 'n_minority',
                             'imbalance_ratio')
+        distinct_phenotypes (bool): whether to return one instane from each
+                                    type of datasets
 
     Returns:
         list: the list of data loaders
@@ -424,6 +427,9 @@ def get_filtered_data_loaders(n_col_bounds=(1, 5000),
                                 & (descriptors['n_col_orig'] >= n_col_orig_bounds[0])
                                 & (descriptors['n_col_orig'] < n_col_orig_bounds[1])]
 
+    if distinct_phenotypes:
+        data_loaders = data_loaders.groupby('phenotype').head(1)
+
     if sorting is not None:
         data_loaders = data_loaders.sort_values(sorting)
 
@@ -434,7 +440,10 @@ def get_filtered_data_loaders(n_col_bounds=(1, 5000),
 
     return [globals()[data_loader] for data_loader in data_loaders]
 
-def get_data_loaders(subset='all', n_smallest=-1, sorting=None):
+def get_data_loaders(subset='all',
+                        n_smallest=-1,
+                        sorting=None,
+                        distinct_phenotypes=False):
     """
     Get a subset of data loaders
 
@@ -442,6 +451,8 @@ def get_data_loaders(subset='all', n_smallest=-1, sorting=None):
         subset (str): 'all'/'study'/'small'/'tiny'
         n_smallest (int): the number of smallest in the sense of "sorting"
         sorting (str): the sorting attribute ('n', 'n_col')
+        distinct_phenotypes (bool): whether to return one instane from each
+                                    type of datasets
 
     Returns:
         list: the list of data loaders
@@ -464,4 +475,5 @@ def get_data_loaders(subset='all', n_smallest=-1, sorting=None):
                                     n_col_orig_bounds=n_col_orig_bounds,
                                     n_bounds=n_bounds,
                                     n_smallest=n_smallest,
-                                    sorting=sorting)
+                                    sorting=sorting,
+                                    distinct_phenotypes=distinct_phenotypes)

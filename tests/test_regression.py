@@ -70,3 +70,7 @@ def test_get_data_loaders():
     assert len(regression.get_data_loaders('tiny')) > 0
 
     assert len(regression.get_data_loaders('study')) > 0
+
+    # this should change if more datasets from the same phenotype are added
+    assert len(regression.get_data_loaders()) >= \
+                len(regression.get_data_loaders(distinct_phenotypes=True))

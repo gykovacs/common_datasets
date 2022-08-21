@@ -173,3 +173,6 @@ def test_get_data_loaders():
     assert len(bin_clas.get_data_loaders('tiny')) > 0
 
     assert len(bin_clas.get_data_loaders('study')) > 0
+
+    assert len(bin_clas.get_data_loaders()) > \
+                len(bin_clas.get_data_loaders(distinct_phenotypes=True))
