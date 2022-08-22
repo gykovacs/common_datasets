@@ -77,4 +77,4 @@ def test_get_data_loaders():
 
     # this should change if more datasets from the same phenotype are added
     assert len(mult_clas.get_data_loaders()) >= \
-                len(mult_clas.get_data_loaders(distinct_phenotypes=True))
+                len(mult_clas.get_data_loaders(n_from_phenotypes=1))

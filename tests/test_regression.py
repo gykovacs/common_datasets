@@ -73,4 +73,4 @@ def test_get_data_loaders():
 
     # this should change if more datasets from the same phenotype are added
     assert len(regression.get_data_loaders()) >= \
-                len(regression.get_data_loaders(distinct_phenotypes=True))
+                len(regression.get_data_loaders(n_from_phenotypes=1))

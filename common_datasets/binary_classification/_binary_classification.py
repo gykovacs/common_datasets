@@ -268,7 +268,7 @@ def get_filtered_data_loaders(*,
                               imbalance_ratio_bounds= (0, 1000),
                               n_smallest=-1,
                               sorting=None,
-                              distinct_phenotypes=False):
+                              n_from_phenotypes=None):
     """
     Get filtered data loaders.
 
@@ -286,8 +286,8 @@ def get_filtered_data_loaders(*,
         n_smallest (int): the number of smallest in the sense of "sorting"
         sorting (str): the sorting attribute ('n', 'n_col', 'n_minority',
                             'imbalance_ratio')
-        distinct_phenotypes (bool): whether to return one instane from each
-                                    type of datasets
+        n_from_phenotypes (int): the maximum number of datasets from a
+                                    phenotype
 
     Returns:
         list: the list of data loaders
@@ -305,8 +305,8 @@ def get_filtered_data_loaders(*,
                                 & (descriptors['n_minority'] >= n_minority_bounds[0])
                                 & (descriptors['n_minority'] < n_minority_bounds[1])]
 
-    if distinct_phenotypes:
-        data_loaders = data_loaders.groupby('phenotype').head(1)
+    if n_from_phenotypes is not None:
+        data_loaders = data_loaders.groupby('phenotype').head(n_from_phenotypes)
 
     if sorting is not None:
         data_loaders = data_loaders.sort_values(sorting)
@@ -321,7 +321,7 @@ def get_filtered_data_loaders(*,
 def get_data_loaders(subset='all',
                     n_smallest=-1,
                     sorting=None,
-                    distinct_phenotypes=False):
+                    n_from_phenotypes=None):
     """
     Get a subset of data loaders
 
@@ -329,8 +329,8 @@ def get_data_loaders(subset='all',
         subset (str): 'all'/'study'/'small'/'tiny'
         n_smallest (int): the number of smallest in the sense of "sorting"
         sorting (str): the sorting attribute ('n', 'n_col')
-        distinct_phenotypes (bool): whether to return one instane from each
-                                    type of datasets
+        n_from_phenotypes (int): the maximum number of datasets from a
+                                    phenotype
 
     Returns:
         list: the list of data loaders
@@ -358,4 +358,4 @@ def get_data_loaders(subset='all',
                                     imbalance_ratio_bounds= imbalance_ratio_bounds,
                                     n_smallest=n_smallest,
                                     sorting=sorting,
-                                    distinct_phenotypes=distinct_phenotypes)
+                                    n_from_phenotypes=n_from_phenotypes)
