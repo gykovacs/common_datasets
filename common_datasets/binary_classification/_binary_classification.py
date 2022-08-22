@@ -261,11 +261,11 @@ __all__= ['load_ada',
 summary_pdf = pd.DataFrame.from_dict(summary_part0 + summary_part1)
 
 def get_filtered_data_loaders(*,
-                              n_col_bounds= (1, 5000),
-                              n_col_orig_bounds= (1, 5000),
-                              n_bounds= (1, 10000),
-                              n_minority_bounds= (1, 10000),
-                              imbalance_ratio_bounds= (0, 1000),
+                              n_col_bounds=(1, 5000),
+                              n_col_orig_bounds=(1, 5000),
+                              n_bounds=(1, 10000),
+                              n_minority_bounds=(1, 10000),
+                              imbalance_ratio_bounds=(0, 1000),
                               n_smallest=-1,
                               sorting=None,
                               n_from_phenotypes=None):
