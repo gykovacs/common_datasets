@@ -648,7 +648,7 @@ def load_monk_2():
     """
     path = 'data/classification/monk-2/monk-2.dat'
     return load_arff_template_binary(path=path,
-                                        name='australian',
+                                        name='monk-2',
                                         target_label='Class',
                                         revert_target=True)
 
