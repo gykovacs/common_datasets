@@ -505,7 +505,8 @@ def numeric_preprocessing(missing_values=np.nan, strategy='median'):
     missing_indicator = MissingIndicator(missing_values=missing_values)
 
     feature_union = FeatureUnion([('imputer', simple_imputer),
-                                  ('missing_indicator', missing_indicator)])
+                                  ('missing_indicator', missing_indicator)],
+                                  n_jobs=1)
 
     return feature_union
 
@@ -678,7 +679,8 @@ class DataPreprocessor:
         feature_union = ColumnTransformer([('numerical', numerical, self.numeric_features()),
                                            ('category', categorical, self.category_features()),
                                            ('ordinal', ordinal, self.ordinal_features()),
-                                           ('target_label', target_label, [self.target_label])])
+                                           ('target_label', target_label, [self.target_label])],
+                                           n_jobs=1)
 
         feature_union.fit(self.dataset_raw)
 

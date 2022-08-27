@@ -127,7 +127,6 @@ load_crx,
 load_lymphography,
 load_wdbc,
 load_ionosphere,
-load_spectfheart,
 load_ada,
 load_hiva
 )
@@ -252,7 +251,6 @@ __all__= ['load_ada',
             'load_lymphography',
             'load_wdbc',
             'load_ionosphere',
-            'load_spectfheart',
             'get_data_loaders',
             'get_filtered_data_loaders',
             'summary_pdf']

@@ -2,18 +2,7 @@
 This module contains the summary of all binary classification problems, part 1
 """
 
-summary_part1 = [{'name': 'spectfheart',
-  'phenotype': 'spectfheart',
-  'citation_key': 'keel',
-  'n_col': 44,
-  'n_col_orig': 44,
-  'n_col_non_unique_orig': 44,
-  'n': 267,
-  'DESCR': 'spectfheart',
-  'n_minority': 212,
-  'imbalance_ratio': 0.25943396226415094,
-  'data_loader': 'load_spectfheart'},
- {'name': 'hypothyroid',
+summary_part1 = [{'name': 'hypothyroid',
   'phenotype': 'hypothyroid',
   'citation_key': 'krnn',
   'n_col': 216,

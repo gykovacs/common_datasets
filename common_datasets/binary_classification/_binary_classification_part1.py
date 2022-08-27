@@ -68,7 +68,6 @@ __all__= ['load_kddcup_buffer_overflow_vs_back',
             'load_lymphography',
             'load_wdbc',
             'load_ionosphere',
-            'load_spectfheart',
             'load_ada',
             'load_hiva']
 
@@ -677,18 +676,18 @@ def load_ionosphere():
                                         target_label='Class',
                                         revert_target=True)
 
-def load_spectfheart():
-    """
-    Load the spectfheart dataset
-
-    Returns:
-        dict: the dataset in sklearn.datasets representation
-    """
-    path = 'data/classification/spectfheart/spectfheart.dat'
-    return load_arff_template_binary(path=path,
-                                        name="spectfheart",
-                                        target_label='OVERALL_DIAGNOSIS',
-                                        revert_target=True)
+#def load_spectfheart():
+#    """
+#    Load the spectfheart dataset
+#
+#    Returns:
+#        dict: the dataset in sklearn.datasets representation
+#    """
+#    path = 'data/classification/spectfheart/spectfheart.dat'
+#    return load_arff_template_binary(path=path,
+#                                        name="spectfheart",
+#                                        target_label='OVERALL_DIAGNOSIS',
+#                                        revert_target=True)
 
 def load_bupa():
     """
