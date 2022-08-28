@@ -127,12 +127,12 @@ load_crx,
 load_lymphography,
 load_wdbc,
 load_ionosphere,
-load_ada,
-load_hiva
+load_ada
+#load_hiva
 )
 
 __all__= ['load_ada',
-            'load_hiva',
+            #'load_hiva',
             'load_abalone_17_vs_7_8_9_10',
             'load_abalone_19_vs_10_11_12_13',
             'load_abalone_20_vs_8_9_10',

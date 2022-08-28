@@ -68,8 +68,9 @@ __all__= ['load_kddcup_buffer_overflow_vs_back',
             'load_lymphography',
             'load_wdbc',
             'load_ionosphere',
-            'load_ada',
-            'load_hiva']
+            'load_ada'
+#            'load_hiva'
+             ]
 
 def load_kddcup_buffer_overflow_vs_back():
     """
@@ -770,26 +771,26 @@ def load_ada():
                         name='ADA',
                         target_label='target_label')
 
-def load_hiva():
-    """
-    Loads the hiva dataset
-
-    Returns:
-        dict: the dataset in sklearn.datasets representation
-    """
-    data = read_csv_data('data/classification/hiva/hiva_train.data', sep=' ', header=None)
-    labels = read_csv_data('data/classification/hiva/hiva_train.labels', header=None)
-
-    # dummy column replaced by labels due to trailing separator characters
-    data[48] = labels
-    data = data.rename({48: 'target_label'}, axis='columns')
-
-    data[data == '?'] = np.nan
-    data = data.astype(float)
-
-    return prepare_csv_data_template(dataset=data,
-                        name='HIVA',
-                        target_label='target_label')
+#def load_hiva():
+#    """
+#    Loads the hiva dataset
+#
+#    Returns:
+#        dict: the dataset in sklearn.datasets representation
+#    """
+#    data = read_csv_data('data/classification/hiva/hiva_train.data', sep=' ', header=None)
+#    labels = read_csv_data('data/classification/hiva/hiva_train.labels', header=None)
+#
+#    # dummy column replaced by labels due to trailing separator characters
+#    data[48] = labels
+#    data = data.rename({48: 'target_label'}, axis='columns')
+#
+#    data[data == '?'] = np.nan
+#    data = data.astype(float)
+#
+#    return prepare_csv_data_template(dataset=data,
+#                        name='HIVA',
+#                        target_label='target_label')
 
 #def load_glass():
 #    """
