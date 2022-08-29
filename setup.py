@@ -5,7 +5,7 @@ def readme():
     with open('README.rst') as f:
         return f.read()
 
-version_file= os.path.join('common_datasets', '__version__.py')
+version_file= os.path.join('common_datasets', '_version.py')
 __version__= "0.0.0"
 with open(version_file) as f:
     exec(f.read())
