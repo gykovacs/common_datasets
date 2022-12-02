@@ -339,8 +339,7 @@ def load_ecoli_0_vs_1():
     path = 'data/classification/ecoli-0_vs_1/ecoli-0_vs_1.dat'
     return load_arff_template_binary(path=path,
                                         name='ecoli_0_vs_1',
-                                        target_label="Class",
-                                        revert_target=True)
+                                        target_label="Class")
 
 def load_ecoli1():
     """

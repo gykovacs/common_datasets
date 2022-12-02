@@ -2,6 +2,10 @@
 This module contains the regression loaders.
 """
 
+import json
+import io
+import pkgutil
+
 import pandas as pd
 
 from .._io import (read_csv_data, read_xls_data,
@@ -9,7 +13,7 @@ from .._io import (read_csv_data, read_xls_data,
                         prepare_csv_data_template,
                         prepare_xls_data_template)
 
-from ._summary import summary
+summary = json.loads(pkgutil.get_data('common_datasets', 'data/summary_regression.json').decode('utf-8'))
 
 summary_pdf = pd.DataFrame.from_dict(summary)
 

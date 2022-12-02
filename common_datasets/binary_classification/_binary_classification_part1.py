@@ -649,8 +649,7 @@ def load_monk_2():
     path = 'data/classification/monk-2/monk-2.dat'
     return load_arff_template_binary(path=path,
                                         name='monk-2',
-                                        target_label='Class',
-                                        revert_target=True)
+                                        target_label='Class')
 
 def load_wdbc():
     """
@@ -674,8 +673,7 @@ def load_ionosphere():
     path = 'data/classification/ionosphere/ionosphere.dat'
     return load_arff_template_binary(path=path,
                                         name="ionosphere",
-                                        target_label='Class',
-                                        revert_target=True)
+                                        target_label='Class')
 
 #def load_spectfheart():
 #    """
@@ -700,8 +698,7 @@ def load_bupa():
     path = 'data/classification/bupa/bupa.dat'
     return load_arff_template_binary(path=path,
                                         name="bupa",
-                                        target_label='Selector',
-                                        revert_target=True)
+                                        target_label='Selector')
 
 def load_crx():
     """
@@ -833,8 +830,7 @@ def load_hypothyroid():
 
     return prepare_csv_data_template(dataset=dataset,
                         name='hypothyroid',
-                        target_label='target',
-                        revert_target=True)
+                        target_label='target')
 
 def load_sylva():
     """
@@ -869,8 +865,7 @@ def load_spectf():
 
     return prepare_csv_data_template(dataset=dataset,
                         name='SPECTF',
-                        target_label='target',
-                        revert_target=True)
+                        target_label='target')
 
 def load_hepatitis():
     """
@@ -887,8 +882,7 @@ def load_hepatitis():
 
     return prepare_csv_data_template(dataset=dataset,
                         name='hepatitis',
-                        target_label='target',
-                        revert_target=True)
+                        target_label='target')
 
 #def load_vehicle():
 #    """

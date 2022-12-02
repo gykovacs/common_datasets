@@ -39,7 +39,7 @@ def test_regression(loader):
 
     dataset = loader()
 
-    assert len(dataset) == 14
+    assert len(dataset) == 17
 
     assert dataset['data'].dtype == float
 

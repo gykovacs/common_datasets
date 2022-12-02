@@ -14,6 +14,7 @@ from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.compose import ColumnTransformer
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
+from sklearn.feature_selection import mutual_info_classif, mutual_info_regression
 
 from scipy.io import arff
 
@@ -274,7 +275,6 @@ def prepare_csv_data_template(dataset,
                                 name,
                                 target_label,
                                 *,
-                                revert_target=False,
                                 feature_types=None,
                                 problem_type='binary',
                                 citation_key='krnn',
@@ -286,7 +286,6 @@ def prepare_csv_data_template(dataset,
         dataset (pd.DataFrame): the dataset to process
         name (str): the name of the dataset
         target_label (str): the target column
-        revert_target (bool): whether to revert the target
         feature_types (dict): te feature types
         problem_type (str): 'binary'/'multiclass'/'regression'
         citation_key (str): the citation key
@@ -309,9 +308,6 @@ def prepare_csv_data_template(dataset,
 
     dataset = dataprep.get_dataset()
 
-    if revert_target:
-        dataset['target'] = 1 - dataset['target']
-
     return dataset
 
 def prepare_xls_data_template(dataset,
@@ -329,7 +325,10 @@ def prepare_xls_data_template(dataset,
         dataset (pd.DataFrame): the dataset to process
         name (str): the name of the dataset
         target_label (str): the target column
-        revert_target (bool): whether to revert the target
+        feature_types (dict): the feature types
+        citation_key (str): the citation key to use
+        problem_type (str): 'binary'/'multiclass'/'regression'
+        missing_data (dict): missing data specification
 
     Returns:
         dict: the dataset in sklearn representation
@@ -356,7 +355,6 @@ def load_arff_template(path,
                         *,
                         feature_types=None,
                         citation_key='keel',
-                        revert_target=False,
                         problem_type='binary',
                         missing_data=None):
     """
@@ -366,8 +364,8 @@ def load_arff_template(path,
         path (str): the path of the data file
         name (str): the name of the dataset
         target_label (str): the label of the target column
+        feature_types (dict): the feature types
         citation_key (str): the citation key to use
-        rever_target (bool): whether to revert the target label
         problem_type (str): 'binary'/'multiclass'/'regression'
         missing_data (dict): missing data specification
 
@@ -394,9 +392,6 @@ def load_arff_template(path,
 
     dataset = dataprep.get_dataset()
 
-    if revert_target:
-        dataset['target'] = 1 - dataset['target']
-
     return dataset
 
 def load_arff_template_binary(path,
@@ -404,7 +399,6 @@ def load_arff_template_binary(path,
                                 target_label,
                                 *,
                                 citation_key='keel',
-                                revert_target=False,
                                 feature_types=None,
                                 missing_data=None):
     """
@@ -428,8 +422,7 @@ def load_arff_template_binary(path,
                                 feature_types=feature_types,
                                 citation_key=citation_key,
                                 problem_type='binary',
-                                missing_data=missing_data,
-                                revert_target=revert_target)
+                                missing_data=missing_data)
 
 def load_arff_template_multiclass(path,
                                     name,
@@ -504,8 +497,10 @@ def numeric_preprocessing(missing_values=np.nan, strategy='median'):
                                    strategy=strategy)
     missing_indicator = MissingIndicator(missing_values=missing_values)
 
-    feature_union = FeatureUnion([('imputer', simple_imputer),
-                                  ('missing_indicator', missing_indicator)],
+    #feature_union = FeatureUnion([('imputer', simple_imputer),
+    #                              ('missing_indicator', missing_indicator)],
+    #                              n_jobs=1)
+    feature_union = FeatureUnion([('imputer', simple_imputer)],
                                   n_jobs=1)
 
     return feature_union
@@ -531,8 +526,9 @@ def category_preprocessing(missing_values='?',
     pipeline = Pipeline([('imputer', simple_imputer),
                          ('encoding', encoding)])
 
-    feature_union = FeatureUnion([('imputation_encoding', pipeline),
-                                  ('missing_indicator', missing_indicator)])
+    #feature_union = FeatureUnion([('imputation_encoding', pipeline),
+    #                              ('missing_indicator', missing_indicator)])
+    feature_union = FeatureUnion([('imputation_encoding', pipeline)])
 
     return feature_union
 
@@ -557,8 +553,10 @@ def ordinal_preprocessing(missing_values='?',
     pipeline = Pipeline([('imputer', simple_imputer),
                          ('encoding', encoding)])
 
-    feature_union = FeatureUnion([('imputation_encoding', pipeline),
-                                  ('missing_indicator', missing_indicator)])
+    #feature_union = FeatureUnion([('imputation_encoding', pipeline),
+    #                              ('missing_indicator', missing_indicator)])
+    feature_union = FeatureUnion([('imputation_encoding', pipeline)])
+
     return feature_union
 
 def class_label_preprocessing():
@@ -690,6 +688,10 @@ class DataPreprocessor:
         tmp = pd.DataFrame(transformed, columns=names)
         tmp = tmp.rename({names[-1]: self.target_label}, axis='columns')
 
+        if (self.problem_type == 'binary'
+                and np.sum(tmp[self.target_label]) > np.sum(1 - tmp[self.target_label])):
+            tmp[self.target_label] = 1 - tmp[self.target_label]
+
         return tmp
 
     def dataset_phenotype(self, dataset):
@@ -721,8 +723,11 @@ class DataPreprocessor:
         result['data'] = transformed.drop(self.target_label, axis='columns').values.astype(float)
         if self.problem_type in ['binary', 'multiclass']:
             result['target'] = transformed[self.target_label].values.astype(int)
+            result['mutual_information'] = mutual_info_classif(result['data'], result['target']).tolist()
         elif self.problem_type == 'regression':
             result['target'] = transformed[self.target_label].values.astype(float)
+            result['mutual_information'] = mutual_info_regression(result['data'], result['target']).tolist()
+
         result['feature_names'] = list(transformed.columns[:-1])
         result['feature_types'] = self.feature_types
         result['target_label'] = self.target_label
@@ -735,6 +740,14 @@ class DataPreprocessor:
         result['n_col_non_unique_orig'] = np.sum(self.dataset_raw.nunique() > 1) - 1
         result['n'] = len(result['target'])
         result['DESCR'] = self.name
+
+        X = result['data']
+        grid = []
+        for idx in range(X.shape[1]):
+            diffs = np.diff(sorted(np.unique(X[:, idx])), 1)
+            grid.append(bool(len(np.unique(diffs)) < np.sqrt(len(np.unique(X[:, idx])))))
+        result['grid'] = grid
+        result['n_feature_uniques'] = [len(np.unique(X[:, idx])) for idx in range(X.shape[1])]
 
         if self.problem_type == 'binary':
             result['n_minority'] = np.sum(result['target'] == 1)

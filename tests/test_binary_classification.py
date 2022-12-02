@@ -139,7 +139,7 @@ def test_binary(loader):
 
     dataset = loader()
 
-    assert len(dataset) == 16
+    assert len(dataset) == 19
 
     assert dataset['data'].dtype == float
 

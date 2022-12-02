@@ -43,7 +43,7 @@ def test_multiclass_arff(loader):
 
     dataset = loader()
 
-    assert len(dataset) == 15
+    assert len(dataset) == 18
 
     assert dataset['data'].dtype == float
 

@@ -2,10 +2,11 @@
 This module brings together all binary classification data loaders
 """
 
-import pandas as pd
+import json
+import io
+import pkgutil
 
-from ._summary_part0 import summary_part0
-from ._summary_part1 import summary_part1
+import pandas as pd
 
 from ._binary_classification_part0 import (load_abalone_17_vs_7_8_9_10,
 load_abalone_19_vs_10_11_12_13,
@@ -131,6 +132,8 @@ load_ada
 #load_hiva
 )
 
+summary = json.loads(pkgutil.get_data('common_datasets', 'data/summary_binary_classification.json').decode('utf-8'))
+
 __all__= ['load_ada',
             #'load_hiva',
             'load_abalone_17_vs_7_8_9_10',
@@ -255,8 +258,7 @@ __all__= ['load_ada',
             'get_filtered_data_loaders',
             'summary_pdf']
 
-
-summary_pdf = pd.DataFrame.from_dict(summary_part0 + summary_part1)
+summary_pdf = pd.DataFrame.from_dict(summary)
 
 def get_filtered_data_loaders(*,
                               n_col_bounds=(1, 5000),
