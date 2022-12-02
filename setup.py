@@ -31,7 +31,7 @@ setup(name='common_datasets',
               'numpy',
               'pandas',
               'scipy',
-              'sklearn',
+              'scikit-learn',
               'openpyxl'
               ],
       py_modules=['common_datasets',
