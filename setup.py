@@ -45,6 +45,6 @@ setup(name='common_datasets',
 		    'common_datasets.clustering': 'common_datasets/clustering',
 		    'common_datasets.binary_classification': 'common_datasets/binary_classification',
 		    'common_datasets.multiclass_classification': 'common_datasets/multiclass_classification'},
-      package_data= {'common_datasets': ['data/*/*/*', 'common_datasets/data/*', 'common_datasets/data/data_level.txt']},
+      package_data= {'common_datasets': ['data/*/*/*', 'data/*.json']},
       include_package_data=True
       )
