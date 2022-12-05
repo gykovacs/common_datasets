@@ -175,3 +175,5 @@ def test_get_data_loaders():
 
     assert len(bin_clas.get_data_loaders()) > \
                 len(bin_clas.get_data_loaders(n_from_phenotypes=1))
+
+    assert len(bin_clas.get_summary_pdf()) > 0
