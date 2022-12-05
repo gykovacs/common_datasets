@@ -44,7 +44,8 @@ __all__= ['load_glass',
           'load_zoo',
           'get_filtered_data_loaders',
           'get_data_loaders',
-          'summary_pdf']
+          'summary_pdf',
+          'get_summary_pdf']
 
 ########
 # arff #
@@ -481,3 +482,10 @@ def get_data_loaders(subset='all',
                                     n_smallest=n_smallest,
                                     sorting=sorting,
                                     n_from_phenotypes=n_from_phenotypes)
+
+def get_summary_pdf():
+    descriptors = summary_pdf
+
+    descriptors['data_loader_function'] = descriptors['data_loader'].apply(lambda x: globals()[x])
+
+    return descriptors

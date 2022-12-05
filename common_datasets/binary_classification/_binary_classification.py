@@ -256,7 +256,8 @@ __all__= ['load_ada',
             'load_ionosphere',
             'get_data_loaders',
             'get_filtered_data_loaders',
-            'summary_pdf']
+            'summary_pdf',
+            'get_summary_pdf']
 
 summary_pdf = pd.DataFrame.from_dict(summary)
 
@@ -351,11 +352,18 @@ def get_data_loaders(subset='all',
     elif subset == 'tiny':
         n_bounds = (n_bounds[0], 120)
 
-    return get_filtered_data_loaders(n_col_bounds= n_col_bounds,
-                                    n_col_orig_bounds= n_col_orig_bounds,
-                                    n_bounds= n_bounds,
-                                    n_minority_bounds= n_minority_bounds,
-                                    imbalance_ratio_bounds= imbalance_ratio_bounds,
+    return get_filtered_data_loaders(n_col_bounds=n_col_bounds,
+                                    n_col_orig_bounds=n_col_orig_bounds,
+                                    n_bounds=n_bounds,
+                                    n_minority_bounds=n_minority_bounds,
+                                    imbalance_ratio_bounds=imbalance_ratio_bounds,
                                     n_smallest=n_smallest,
                                     sorting=sorting,
                                     n_from_phenotypes=n_from_phenotypes)
+
+def get_summary_pdf():
+    descriptors = summary_pdf
+
+    descriptors['data_loader_function'] = descriptors['data_loader'].apply(lambda x: globals()[x])
+
+    return descriptors
