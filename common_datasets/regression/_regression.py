@@ -512,6 +512,12 @@ def get_data_loaders(subset='all',
                                     n_from_phenotypes=n_from_phenotypes)
 
 def get_summary_pdf():
+    """
+    Returns the summary pandas dataframe with loader function references
+    
+    Returns:
+        pd.DataFrame: the summary pandas dataframe
+    """
     descriptors = summary_pdf
 
     descriptors['data_loader_function'] = descriptors['data_loader'].apply(lambda x: globals()[x])
