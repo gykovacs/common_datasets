@@ -39,6 +39,18 @@ __all__= ['load_airfoil',
           'load_treasury',
           'load_compactiv',
           'load_puma32h',
+          'load_o_ring',
+          'load_daily_demand',
+          'load_wsn_ale',
+          'load_servo',
+          'load_qsar_aquatic_toxicity',
+          'load_excitation_current',
+          'load_qsar_fish_toxicity',
+          'load_concrete',
+          'load_maternal_health_risk',
+          'load_plastic',
+          'load_boom_bikes',
+          'load_medical_cost',
           'get_data_loaders',
           'get_filtered_data_loaders',
           'summary_pdf',
@@ -157,6 +169,20 @@ def load_puma32h():
     return load_arff_template_regression(path='data/regression/puma32h/puma32h.dat',
                                             name='puma32h',
                                             target_label='thetadd6')
+
+def load_plastic():
+    """
+    Load the plastic dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+    return load_arff_template_regression(path='data/regression/plastic/plastic.dat',
+                                            name='plastic',
+                                            target_label='Pressure',
+                                            citation_key='keel')
+
+
 
 #######
 # csv #
@@ -320,6 +346,236 @@ def load_communities():
                         target_label='target',
                         problem_type='regression')
 
+def load_o_ring():
+    """
+    Loads the o-ring dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/o-ring/o-ring-erosion-only.data',
+                        sep=' ',
+                        header=None)
+
+    columns = list(dataset.columns)
+    columns[1] = 'target'
+    dataset.columns = columns
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='o-ring',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='uci')
+
+def load_daily_demand():
+    """
+    Loads the daily-demand dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/daily-demand/Daily_Demand_Forecasting_Orders.csv',
+                        sep=';',
+                        header=0)
+
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='daily-demand',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='uci')
+
+def load_wsn_ale():
+    """
+    Loads the wsn-ale dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/wsn-ale/mcs_ds_edited_iter_shuffled.csv',
+                        sep=',',
+                        header=0)
+
+    dataset.drop(dataset.columns[-1], axis='columns')
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='wsn-ale',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='uci')
+
+def load_servo():
+    """
+    Loads the servo dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/servo/servo.data',
+                        sep=',')
+
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+    dataset['target'] = dataset['target'].apply(lambda x: float(x))
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='servo',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='uci')
+
+def load_qsar_aquatic_toxicity():
+    """
+    Loads the qsar aquatic toxicity dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/qsar_aquatic_toxicity/qsar_aquatic_toxicity.csv',
+                        sep=';')
+
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='qsar-aquatic-toxicity',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='uci')
+
+def load_excitation_current():
+    """
+    Loads the excitation current dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/excitation_current/synchronous_machine.csv',
+                        sep=';',
+                        header=0,
+                        decimal=',')
+
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='excitation_current',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='uci')
+
+def load_qsar_fish_toxicity():
+    """
+    Loads the qsar fish toxicity dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/qsar-fish-toxicity/qsar_fish_toxicity.csv',
+                        sep=';')
+
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='qsar-fish-toxicity',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='uci')
+
+def load_maternal_health_risk():
+    """
+    Loads the maternal health risk dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/maternal_health_risk/Maternal Health Risk Data Set.csv',
+                        sep=',',
+                        header=1)
+
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+
+    dataset.loc[dataset['target'] == 'low risk', 'target'] = 0
+    dataset.loc[dataset['target'] == 'mid risk', 'target'] = 1
+    dataset.loc[dataset['target'] == 'high risk', 'target'] = 2
+
+    dataset['target'] = dataset['target'].astype(float)
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='maternal_health_risk',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='uci')
+
+def load_boom_bikes():
+    """
+    Loads the boom bikes dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/boom_bikes/day.csv',
+                        sep=',',
+                        header=0)
+
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+
+    dataset = dataset.drop(columns=dataset.columns[:2])
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='boom_bikes',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='boombikes')
+
+def load_medical_cost():
+    """
+    Loads the medical cost dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_csv_data('data/regression/medical_cost/insurance.csv',
+                        sep=',',
+                        header=0)
+
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+
+    dataset = dataset.drop(columns=dataset.columns[:2])
+
+    return prepare_csv_data_template(dataset=dataset,
+                        name='medical_cost',
+                        target_label='target',
+                        problem_type='regression',
+                        citation_key='mlwithr')
+
 ########
 # xlsx #
 ########
@@ -423,6 +679,25 @@ def load_ccpp():
                         name="ccpp",
                         target_label='target')
 
+def load_concrete():
+    """
+    Load the concrete dataset
+
+    Returns:
+        dict: the dataset in sklearn.datasets format
+    """
+
+    dataset = read_xls_data('data/regression/concrete/Concrete_Data.xlsx',
+                        sheet_name='Sheet1')
+    columns = list(dataset.columns)
+    columns[-1] = 'target'
+    dataset.columns = columns
+
+    return prepare_xls_data_template(dataset=dataset,
+                        name="concrete",
+                        target_label='target',
+                        citation_key='uci')
+
 #########
 # other #
 #########
@@ -514,7 +789,7 @@ def get_data_loaders(subset='all',
 def get_summary_pdf():
     """
     Returns the summary pandas dataframe with loader function references
-    
+
     Returns:
         pd.DataFrame: the summary pandas dataframe
     """

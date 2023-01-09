@@ -72,6 +72,29 @@ year = "2017",
 title = "{UCI} Machine Learning Repository",
 url = "http://archive.ics.uci.edu/ml",
 institution = "University of California, Irvine, School of Information and Computer Sciences" }
+""",
+'boom_bikes':"""
+@article{boombikes,
+	year={2013},
+	issn={2192-6352},
+	journal={Progress in Artificial Intelligence},
+	doi={10.1007/s13748-013-0040-3},
+	title={Event labeling combining ensemble detectors and background knowledge},
+	url={http://dx.doi.org/10.1007/s13748-013-0040-3},
+	publisher={Springer Berlin Heidelberg},
+	keywords={Event labeling; Event detection; Ensemble learning; Background knowledge},
+	author={Fanaee-T, Hadi and Gama, Joao},
+	pages={1-15}
+}
+""",
+'mlwithr':"""
+@book{mlwithr,
+author = {Lantz, Brett},
+title = {Machine Learning with R},
+year = {2013},
+isbn = {1782162143},
+publisher = {Packt Publishing}
+}
 """
 }
 
@@ -196,7 +219,8 @@ def read_csv_data(filename,
                     sep=',',
                     usecols=None,
                     header=None,
-                    delim_whitespace=False):
+                    delim_whitespace=False,
+                    decimal='.'):
     """
     Read a csv file
 
@@ -206,6 +230,7 @@ def read_csv_data(filename,
         usecols (list): the columns to use
         header (None/list): the header
         delim_whitespace (bool): delimeter whitespaces
+        decimal (str): the decimal separator character
 
     Returns:
         pd.DataFrame: the read data
@@ -214,12 +239,14 @@ def read_csv_data(filename,
         return pd.read_csv(io.BytesIO(pkgutil.get_data('common_datasets', filename)),
                             header=header,
                             usecols=usecols,
-                            delim_whitespace=delim_whitespace)
+                            delim_whitespace=delim_whitespace,
+                            decimal=decimal)
 
     return pd.read_csv(io.BytesIO(pkgutil.get_data('common_datasets', filename)),
                         header=header,
                         usecols=usecols,
-                        sep=sep)
+                        sep=sep,
+                        decimal=decimal)
 
 def read_xls_data(filename, sheet_name= None):
     """
@@ -521,7 +548,7 @@ def category_preprocessing(missing_values='?',
                                    strategy=strategy)
     missing_indicator = MissingIndicator(missing_values=missing_values)
 
-    encoding = OneHotEncoder(drop='first', sparse=False)
+    encoding = OneHotEncoder(drop='first', sparse_output=False)
 
     pipeline = Pipeline([('imputer', simple_imputer),
                          ('encoding', encoding)])
@@ -566,7 +593,7 @@ def class_label_preprocessing():
     Returns:
         Pipeline: the pipeline
     """
-    encoding = OneHotEncoder(drop='first', sparse=False)
+    encoding = OneHotEncoder(drop='first', sparse_output=False)
 
     return Pipeline([('class_label', encoding)])
 
