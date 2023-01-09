@@ -36,7 +36,12 @@ loaders = [regression.load_diabetes,
            regression.load_servo,
            regression.load_qsar_aquatic_toxicity,
            regression.load_excitation_current,
-           regression.load_qsar_fish_toxicity]
+           regression.load_qsar_fish_toxicity,
+           regression.load_concrete,
+           regression.load_maternal_health_risk,
+           regression.load_plastic,
+           regression.load_boom_bikes,
+           regression.load_medical_cost]
 
 @pytest.mark.parametrize("loader", loaders)
 def test_regression(loader):
