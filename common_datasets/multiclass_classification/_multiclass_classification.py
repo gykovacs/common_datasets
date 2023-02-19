@@ -3,7 +3,6 @@ This module contains the multiclass data loaders
 """
 
 import json
-import io
 import pkgutil
 
 import pandas as pd
@@ -12,7 +11,8 @@ from .._io import (read_csv_data,
                     load_arff_template_multiclass,
                     prepare_csv_data_template)
 
-summary = json.loads(pkgutil.get_data('common_datasets', 'data/summary_multiclass_classification.json').decode('utf-8'))
+SUMMARY_PATH = 'data/summary_multiclass_classification.json'
+summary = json.loads(pkgutil.get_data('common_datasets', SUMMARY_PATH).decode('utf-8'))
 
 summary_pdf = pd.DataFrame.from_dict(summary)
 
@@ -398,7 +398,8 @@ def load_yeast():
 
 #############################
 
-def get_filtered_data_loaders(n_col_bounds=(1, 5000),
+def get_filtered_data_loaders(*,
+                              n_col_bounds=(1, 5000),
                               n_col_orig_bounds=(1, 5000),
                               n_bounds=(1, 10000),
                               n_smallest=-1,

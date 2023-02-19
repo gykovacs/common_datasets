@@ -9,7 +9,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-from sklearn.impute import SimpleImputer, MissingIndicator
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.compose import ColumnTransformer
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -98,6 +98,23 @@ publisher = {Packt Publishing}
 """
 }
 
+# Revisit later
+#
+#def adjusted_median(array):
+#    if (array.shape[0] % 2) == 1:
+#        return np.median(array)
+#
+#    values, counts = np.unique(array, return_counts=True)
+#    count_map = {val: count for val, count in zip(values, counts)}
+#    sorted_array = sorted(array)
+#    first = sorted_array[int(array.shape[0]/2) - 1]
+#    second = sorted_array[int(array.shape[0]/2)]
+#
+#    if count_map[first] < count_map[second]:
+#        return second
+#
+#    return first
+
 def coalesce(val_a, val_b):
     """
     The coalesce functionality
@@ -112,6 +129,35 @@ def coalesce(val_a, val_b):
     if val_a is None:
         return val_b
     return val_a
+
+# Difficulty with the potentially incoming pandas dataframes
+#
+#class AdjustedSimpleImputer(BaseEstimator, TransformerMixin):
+#    def __init__(self, missing_values=np.nan):
+#        self.missing_values = missing_values
+#
+#    def fit(self, input_array, y=None):
+#        self.imputers = []
+#        for idx in range(input_array.shape[1]):
+#            adjusted_median_value = adjusted_median(input_array[:, idx])
+#            self.imputers.append(SimpleImputer(missing_values=self.missing_values,
+#                               strategy='constant',
+#                               fill_value=adjusted_median_value).fit(input_array[:, [idx]]))
+#
+#        return self
+#
+#    def transform(self, input_array, y=None): # pylint: disable=invalid-name
+#        output_array = input_array.copy()
+#        _ = y
+#
+#        for idx in range(input_array.shape[1]):
+#            output_array[:, idx] = self.imputers[idx].transform(input_array[:, [idx]])[:, 0]
+#
+#        return output_array
+#
+#    def get_feature_names_out(self, features):
+#
+#        return features
 
 class IdentityTransformer(BaseEstimator, TransformerMixin):
     """
@@ -216,6 +262,7 @@ class LabelEncoder(BaseEstimator, TransformerMixin):
         return features
 
 def read_csv_data(filename,
+                    *,
                     sep=',',
                     usecols=None,
                     header=None,
@@ -277,7 +324,8 @@ def read_arff_data(filename):
     Returns:
         np.array, obj: the data and the metadata
     """
-    return arff.loadarff(io.StringIO(pkgutil.get_data('common_datasets', filename).decode('unicode_escape')))
+    return arff.loadarff(io.StringIO(pkgutil.get_data('common_datasets',
+                                                      filename).decode('unicode_escape')))
 
 def determine_types(dataframe):
     """
@@ -522,7 +570,33 @@ def numeric_preprocessing(missing_values=np.nan, strategy='median'):
     """
     simple_imputer = SimpleImputer(missing_values=missing_values,
                                    strategy=strategy)
-    missing_indicator = MissingIndicator(missing_values=missing_values)
+    #simple_imputer = AdjustedSimpleImputer(missing_values=missing_values)
+    #missing_indicator = MissingIndicator(missing_values=missing_values)
+
+    #feature_union = FeatureUnion([('imputer', simple_imputer),
+    #                              ('missing_indicator', missing_indicator)],
+    #                              n_jobs=1)
+    feature_union = FeatureUnion([('imputer', simple_imputer)],
+                                  n_jobs=1)
+
+    return feature_union
+
+def numeric_grid_preprocessing(missing_values=np.nan, strategy='most_frequent'):
+    """
+    Pipeline for processing numeric features
+
+    Args:
+        missing_values (obj/list/value): the missing value indicator
+        strategy (str): the imputation strategy
+
+    Returns:
+        Transformer: the pipeline
+    """
+    simple_imputer = SimpleImputer(missing_values=missing_values,
+                                   strategy=strategy)
+    #simple_imputer = KNNImputer(missing_values=missing_values, n_neighbors=1)
+    #simple_imputer = AdjustedSimpleImputer(missing_values=missing_values)
+    #missing_indicator = MissingIndicator(missing_values=missing_values)
 
     #feature_union = FeatureUnion([('imputer', simple_imputer),
     #                              ('missing_indicator', missing_indicator)],
@@ -546,7 +620,7 @@ def category_preprocessing(missing_values='?',
     """
     simple_imputer = SimpleImputer(missing_values=missing_values,
                                    strategy=strategy)
-    missing_indicator = MissingIndicator(missing_values=missing_values)
+    #missing_indicator = MissingIndicator(missing_values=missing_values)
 
     encoding = OneHotEncoder(drop='first', sparse_output=False)
 
@@ -573,7 +647,7 @@ def ordinal_preprocessing(missing_values='?',
     """
     simple_imputer = SimpleImputer(missing_values=missing_values,
                                    strategy=strategy)
-    missing_indicator = MissingIndicator(missing_values=missing_values)
+    #missing_indicator = MissingIndicator(missing_values=missing_values)
 
     encoding = OrdinalEncoder()
 
@@ -615,6 +689,7 @@ class DataPreprocessor:
     def __init__(self,
                  dataset_raw,
                  *,
+                 grid_threshold='sqrt',
                  target_label=None,
                  missing_data=None,
                  name=None,
@@ -636,19 +711,22 @@ class DataPreprocessor:
 
         if missing_data is None:
             missing_data = {'numeric': {'strategy': 'median', 'missing_values': np.nan},
+                            'numeric_grid': {'strategy': 'most_frequent', 'missing_values': np.nan},
                             'category': {'strategy': 'most_frequent', 'missing_values': '?'},
                             'ordinal': {'strategy': 'most_frequent', 'missing_values': '?'}}
 
-        self.name = name
-        self.target_label = target_label
+        self.descriptor = {'name': name,
+                           'target_label': target_label,
+                           'problem_type': problem_type,
+                           'citation_key': citation_key}
+        self.grid_threshold = grid_threshold
         self.missing_data = missing_data
 
         self.feature_types = feature_types
 
-        self.problem_type = problem_type
-
         self.dataset_raw = dataset_raw
-        self.citation_key = citation_key
+
+        self.grid = None
 
     def category_features(self):
         """
@@ -658,7 +736,8 @@ class DataPreprocessor:
             list: the category features
         """
         return [key for key, item in self.feature_types.items()
-                    if item in ['nominal', 'category'] and key != self.target_label]
+                    if item in ['nominal', 'category']
+                        and key != self.descriptor['target_label']]
 
     def numeric_features(self):
         """
@@ -667,8 +746,24 @@ class DataPreprocessor:
         Returns:
             list: the list of numeric features
         """
-        return [key for key, item in self.feature_types.items()
-                    if item in ['numeric', 'real', 'integer'] and key != self.target_label]
+        assert len(self.feature_types) == len(self.grid)
+
+        return [key for idx, (key, item) in enumerate(self.feature_types.items())
+                    if item in ['numeric', 'real', 'integer']
+                        and key != self.descriptor['target_label'] and not self.grid[idx]]
+
+    def numeric_grid_features(self):
+        """
+        Numeric features
+
+        Returns:
+            list: the list of numeric features
+        """
+        assert len(self.feature_types) == len(self.grid)
+
+        return [key for idx, (key, item) in enumerate(self.feature_types.items())
+                    if item in ['numeric', 'real', 'integer']
+                        and key != self.descriptor['target_label'] and self.grid[idx]]
 
     def ordinal_features(self):
         """
@@ -678,7 +773,7 @@ class DataPreprocessor:
             list: the list of ordinal features
         """
         return [key for key, item in self.feature_types.items()
-                    if item in ['ordinal'] and key != self.target_label]
+                    if item in ['ordinal'] and key != self.descriptor['target_label']]
 
     def _transform_dataset(self):
         """
@@ -688,38 +783,44 @@ class DataPreprocessor:
             pd.DataFrame: the transformed dataset
         """
         numerical = numeric_preprocessing(**self.missing_data['numeric'])
+        numerical_grid = numeric_grid_preprocessing(**self.missing_data['numeric_grid'])
         categorical = category_preprocessing(**self.missing_data['category'])
         ordinal = ordinal_preprocessing(**self.missing_data['ordinal'])
 
-        if self.problem_type == 'binary':
+        if self.descriptor['problem_type'] == 'binary':
             target_label = class_label_preprocessing()
-        elif self.problem_type == 'multiclass':
+        elif self.descriptor['problem_type'] == 'multiclass':
             target_label = multiclass_label_preprocessing()
-        elif self.problem_type == 'regression':
+        elif self.descriptor['problem_type'] == 'regression':
             target_label = IdentityTransformer()
 
-        n_features = len(self.numeric_features()) + len(self.category_features()) + 1
-        assert n_features == len(self.dataset_raw.columns)
+        n_features = len(self.numeric_features()) + len(self.category_features())\
+                        + len(self.numeric_grid_features()) + len(self.ordinal_features()) + 1
+        message = f"{str(n_features)} {len(self.dataset_raw.columns)}"
+        assert n_features == len(self.dataset_raw.columns), message
 
         feature_union = ColumnTransformer([('numerical', numerical, self.numeric_features()),
-                                           ('category', categorical, self.category_features()),
-                                           ('ordinal', ordinal, self.ordinal_features()),
-                                           ('target_label', target_label, [self.target_label])],
-                                           n_jobs=1)
+                                ('numerical_grid', numerical_grid, self.numeric_grid_features()),
+                                ('category', categorical, self.category_features()),
+                                ('ordinal', ordinal, self.ordinal_features()),
+                                ('target_label', target_label, [self.descriptor['target_label']])],
+                                n_jobs=1)
 
         feature_union.fit(self.dataset_raw)
 
         transformed = feature_union.transform(self.dataset_raw)
         names = feature_union.get_feature_names_out()
 
-        tmp = pd.DataFrame(transformed, columns=names)
-        tmp = tmp.rename({names[-1]: self.target_label}, axis='columns')
+        pdf = pd.DataFrame(transformed, columns=names)
+        pdf = pdf.rename({names[-1]: self.descriptor['target_label']}, axis='columns')
 
-        if (self.problem_type == 'binary'
-                and np.sum(tmp[self.target_label]) > np.sum(1 - tmp[self.target_label])):
-            tmp[self.target_label] = 1 - tmp[self.target_label]
+        total_target = np.sum(pdf[self.descriptor['target_label']]) # pylint: disable=unsubscriptable-object
+        total_opposite = np.sum(1 - pdf[self.descriptor['target_label']]) # pylint: disable=unsubscriptable-object
 
-        return tmp
+        if (self.descriptor['problem_type'] == 'binary' and total_target > total_opposite):
+            pdf[self.descriptor['target_label']] = 1 - pdf[self.descriptor['target_label']] # pylint: disable=unsubscriptable-object,unsupported-assignment-operation
+
+        return pdf
 
     def dataset_phenotype(self, dataset):
         """
@@ -745,42 +846,55 @@ class DataPreprocessor:
         """
         result = {}
 
+        grid_function = np.sqrt
+        if self.grid_threshold == 'log2':
+            grid_function = np.log2
+
+        self.grid = []
+        for _, column in enumerate(self.dataset_raw.columns):
+            if pd.api.types.is_numeric_dtype(self.dataset_raw[column]):
+                array = self.dataset_raw[column].values
+                diffs = np.diff(sorted(np.unique(array)), 1)
+                self.grid.append(bool(len(np.unique(diffs)) < grid_function(len(np.unique(array)))))
+            else:
+                self.grid.append(False)
+
         transformed = self._transform_dataset()
 
-        result['data'] = transformed.drop(self.target_label, axis='columns').values.astype(float)
-        if self.problem_type in ['binary', 'multiclass']:
-            result['target'] = transformed[self.target_label].values.astype(int)
-            result['mutual_information'] = mutual_info_classif(result['data'], result['target']).tolist()
-        elif self.problem_type == 'regression':
-            result['target'] = transformed[self.target_label].values.astype(float)
-            result['mutual_information'] = mutual_info_regression(result['data'], result['target']).tolist()
+        result['data'] = transformed.drop(self.descriptor['target_label'],
+                                          axis='columns').values.astype(float)
+        if self.descriptor['problem_type'] in ['binary', 'multiclass']:
+            result['target'] = transformed[self.descriptor['target_label']].values.astype(int) # pylint: disable=unsubscriptable-object
+            result['mutual_information'] = mutual_info_classif(result['data'],
+                                                               result['target']).tolist()
+        elif self.descriptor['problem_type'] == 'regression':
+            result['target'] = transformed[self.descriptor['target_label']].values.astype(float) # pylint: disable=unsubscriptable-object
+            result['mutual_information'] = mutual_info_regression(result['data'],
+                                                                  result['target']).tolist()
+
+        X = result['data']
+
+        result['grid'] = self.grid
+        result['n_feature_uniques'] = [len(np.unique(X[:, idx])) for idx in range(X.shape[1])]
 
         result['feature_names'] = list(transformed.columns[:-1])
         result['feature_types'] = self.feature_types
-        result['target_label'] = self.target_label
-        result['name'] = self.name
-        result['phenotype'] = self.dataset_phenotype(self.name)
-        result['citation'] = references.get(self.citation_key, None)
-        result['citation_key'] = self.citation_key
+        result['target_label'] = self.descriptor['target_label']
+        result['name'] = self.descriptor['name']
+        result['phenotype'] = self.dataset_phenotype(self.descriptor['name'])
+        result['citation'] = references.get(self.descriptor['citation_key'], None)
+        result['citation_key'] = self.descriptor['citation_key']
         result['n_col'] = len(result['feature_names'])
         result['n_col_orig'] = len(self.dataset_raw.columns) - 1
         result['n_col_non_unique_orig'] = np.sum(self.dataset_raw.nunique() > 1) - 1
         result['n'] = len(result['target'])
-        result['DESCR'] = self.name
+        result['DESCR'] = self.descriptor['name']
 
-        X = result['data']
-        grid = []
-        for idx in range(X.shape[1]):
-            diffs = np.diff(sorted(np.unique(X[:, idx])), 1)
-            grid.append(bool(len(np.unique(diffs)) < np.sqrt(len(np.unique(X[:, idx])))))
-        result['grid'] = grid
-        result['n_feature_uniques'] = [len(np.unique(X[:, idx])) for idx in range(X.shape[1])]
-
-        if self.problem_type == 'binary':
+        if self.descriptor['problem_type'] == 'binary':
             result['n_minority'] = np.sum(result['target'] == 1)
             imb_ratio = np.sum(result['target'] == 0) / np.sum(result['target'] == 1)
             result['imbalance_ratio'] = imb_ratio
-        if self.problem_type == 'multiclass':
+        if self.descriptor['problem_type'] == 'multiclass':
             result['n_classes'] = len(np.unique(result['target']))
 
         return result

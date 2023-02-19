@@ -3,7 +3,6 @@ This module contains the regression loaders.
 """
 
 import json
-import io
 import pkgutil
 
 import pandas as pd
@@ -13,7 +12,8 @@ from .._io import (read_csv_data, read_xls_data,
                         prepare_csv_data_template,
                         prepare_xls_data_template)
 
-summary = json.loads(pkgutil.get_data('common_datasets', 'data/summary_regression.json').decode('utf-8'))
+summary = json.loads(pkgutil.get_data('common_datasets',
+                                      'data/summary_regression.json').decode('utf-8'))
 
 summary_pdf = pd.DataFrame.from_dict(summary)
 
@@ -427,7 +427,7 @@ def load_servo():
     columns = list(dataset.columns)
     columns[-1] = 'target'
     dataset.columns = columns
-    dataset['target'] = dataset['target'].apply(lambda x: float(x))
+    dataset['target'] = dataset['target'].apply(float)
 
     return prepare_csv_data_template(dataset=dataset,
                         name='servo',
@@ -508,7 +508,8 @@ def load_maternal_health_risk():
         dict: the dataset in sklearn.datasets format
     """
 
-    dataset = read_csv_data('data/regression/maternal_health_risk/Maternal Health Risk Data Set.csv',
+    path = 'data/regression/maternal_health_risk/Maternal Health Risk Data Set.csv'
+    dataset = read_csv_data(path,
                         sep=',',
                         header=1)
 

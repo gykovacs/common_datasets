@@ -3,7 +3,6 @@ This module brings together all binary classification data loaders
 """
 
 import json
-import io
 import pkgutil
 
 import pandas as pd
@@ -132,7 +131,8 @@ load_ada
 #load_hiva
 )
 
-summary = json.loads(pkgutil.get_data('common_datasets', 'data/summary_binary_classification.json').decode('utf-8'))
+summary = json.loads(pkgutil.get_data('common_datasets',
+                                      'data/summary_binary_classification.json').decode('utf-8'))
 
 __all__= ['load_ada',
             #'load_hiva',
