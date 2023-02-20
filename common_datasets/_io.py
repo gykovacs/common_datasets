@@ -872,6 +872,16 @@ class DataPreprocessor:
             result['mutual_information'] = mutual_info_regression(result['data'],
                                                                   result['target']).tolist()
 
+        # the grid is populated again because of the potential additional columns
+        self.grid = []
+        for _, column in enumerate(transformed.columns):
+            if pd.api.types.is_numeric_dtype(transformed[column]):
+                array = transformed[column].values
+                diffs = np.diff(sorted(np.unique(array)), 1)
+                self.grid.append(bool(len(np.unique(diffs)) < grid_function(len(np.unique(array)))))
+            else:
+                self.grid.append(False)
+
         X = result['data']
 
         result['grid'] = self.grid
