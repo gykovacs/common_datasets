@@ -848,7 +848,7 @@ def load_sylva():
     database_raw['target']= target
 
     return prepare_csv_data_template(dataset=database_raw,
-                        name='hypothyroid',
+                        name='sylva',
                         target_label='target')
 
 def load_spectf():
