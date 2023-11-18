@@ -915,19 +915,12 @@ class DataPreprocessor:
             result['mutual_information'] = mutual_info_regression(result['data'],
                                                                   result['target']).tolist()
 
+        X = result['data']
         # the grid is populated again because of the potential additional columns
         self.grid = []
-        for _, column in enumerate(transformed.columns):
-            if pd.api.types.is_numeric_dtype(transformed[column]):
-                array = transformed[column].values
-                if len(np.unique(array)) > 1:
-                    self.grid.append(lattice_feature(array))
-                else:
-                    self.grid.append(False)
-            else:
-                self.grid.append(False)
-
-        X = result['data']
+        for idx in range(X.shape[1]):
+            array = X[:, idx]
+            self.grid.append(lattice_feature(array))
 
         result['grid'] = self.grid
         result['n_feature_uniques'] = [len(np.unique(X[:, idx])) for idx in range(X.shape[1])]
