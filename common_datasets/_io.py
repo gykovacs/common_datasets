@@ -247,7 +247,7 @@ class LabelEncoder(BaseEstimator, TransformerMixin):
             np.array: the transformed array
         """
         _ = y
-        return pd.DataFrame([self.unique_mapping[val[0]] for _, val in input_array.iterrows()])
+        return pd.DataFrame([self.unique_mapping[val.iloc[0]] for _, val in input_array.iterrows()])
 
     def get_feature_names_out(self, features):
         """
@@ -682,6 +682,33 @@ def multiclass_label_preprocessing():
 
     return Pipeline([('multiclass_label', encoding)])
 
+def lattice_feature(x: np.array, threshold=1) -> bool:
+    """
+    Determines if a feature is lattice feature
+
+    Args:
+        x (np.array): the feature values
+        threshold (int|str): the threshold on the count of lattice
+                            costellations or 'sqrt' for a dynamic
+                            threshold based on the square root of the
+                            number of unique feature values
+
+    Returns:
+        bool: True indicates a lattice feature
+    """
+    x_u = np.unique(x)
+
+    if threshold == 'sqrt':
+        threshold = np.sqrt(x_u.shape[0])
+
+    for x_val in x_u:
+        x_diff = np.round(np.abs(x_u - x_val), 12)
+        has = np.any(np.unique(x_diff, return_counts=True)[1] > threshold)
+        if has:
+            break
+
+    return bool(has)
+
 class DataPreprocessor:
     """
     The data preprocessor class
@@ -854,8 +881,12 @@ class DataPreprocessor:
         for _, column in enumerate(self.dataset_raw.columns):
             if pd.api.types.is_numeric_dtype(self.dataset_raw[column]):
                 array = self.dataset_raw[column].values
-                diffs = np.diff(sorted(np.unique(array)), 1)
-                self.grid.append(bool(len(np.unique(diffs)) < grid_function(len(np.unique(array)))))
+                #diffs = np.diff(sorted(np.unique(array)), 1)
+                #self.grid.append(bool(len(np.unique(diffs)) < grid_function(len(np.unique(array)))))
+                if len(np.unique(array)) > 1:
+                    self.grid.append(lattice_feature(array))
+                else:
+                    self.grid.append(False)
             else:
                 self.grid.append(False)
 
@@ -865,8 +896,20 @@ class DataPreprocessor:
                                           axis='columns').values.astype(float)
         if self.descriptor['problem_type'] in ['binary', 'multiclass']:
             result['target'] = transformed[self.descriptor['target_label']].values.astype(int) # pylint: disable=unsubscriptable-object
-            result['mutual_information'] = mutual_info_classif(result['data'],
-                                                               result['target']).tolist()
+
+            if len(result['data']) > 5_000:
+                mask = np.hstack([np.repeat(True, 5_000), np.repeat(False, len(result['data']) - 5_000)])
+                random_state = np.random.RandomState(5)
+                random_state.shuffle(mask)
+                sample_data = result['data'][mask]
+                sample_target = result['target'][mask]
+            else:
+                sample_data = result['data']
+                sample_target = result['target']
+
+            result['mutual_information'] = mutual_info_classif(sample_data,
+                                                               sample_target).tolist()
+
         elif self.descriptor['problem_type'] == 'regression':
             result['target'] = transformed[self.descriptor['target_label']].values.astype(float) # pylint: disable=unsubscriptable-object
             result['mutual_information'] = mutual_info_regression(result['data'],
@@ -877,8 +920,10 @@ class DataPreprocessor:
         for _, column in enumerate(transformed.columns):
             if pd.api.types.is_numeric_dtype(transformed[column]):
                 array = transformed[column].values
-                diffs = np.diff(sorted(np.unique(array)), 1)
-                self.grid.append(bool(len(np.unique(diffs)) < grid_function(len(np.unique(array)))))
+                if len(np.unique(array)) > 1:
+                    self.grid.append(lattice_feature(array))
+                else:
+                    self.grid.append(False)
             else:
                 self.grid.append(False)
 
