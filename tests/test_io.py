@@ -19,7 +19,7 @@ def test_log_grid():
     """
     Testing the log grid directive
     """
-    
+
     dp = DataPreprocessor(pd.DataFrame({'a': [0, 0, 1, 0, 2, 0, 0, 0, 0, 1],
                                         'target': [0, 0, 0, 0, 0, 1, 1, 1, 1, 1]}),
                           grid_threshold='log2',
@@ -27,7 +27,7 @@ def test_log_grid():
                           name='test_dataset',
                           feature_types={'a': 'numeric',
                                          'target': 'numeric'})
-    
+
     dataset = dp.get_dataset()
-    
+
     assert dataset['grid'][0]

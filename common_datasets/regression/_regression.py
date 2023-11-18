@@ -704,12 +704,12 @@ def load_concrete():
 #########
 
 def get_filtered_data_loaders(*,
-                              n_col_bounds=(1, 5000),
-                              n_col_orig_bounds=(1, 5000),
-                              n_bounds=(1, 10000),
-                              n_smallest=-1,
-                              sorting=None,
-                              n_from_phenotypes=None):
+                                n_col_bounds=(1, 5000),
+                                n_col_orig_bounds=(1, 5000),
+                                n_bounds=(1, 10000),
+                                n_smallest=-1,
+                                sorting=None,
+                                n_from_phenotypes=None):
     """
     Get filtered data loaders.
 
